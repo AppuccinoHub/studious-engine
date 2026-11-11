@@ -1,0 +1,1399 @@
+<!doctype html>
+<html lang="en" translate="no">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="google" content="notranslate">
+<meta name="author" content="Assunta Scotto">
+<meta name="copyright" content="Copyright (c) 2026 Assunta Scotto. All rights reserved.">
+<meta name="description" content="Ricerca AP, a research-skills trainer for the AP Italian course project. Created by Assunta Scotto, 2026.">
+<title>Ricerca AP</title>
+<link rel="icon" href="data:,">
+<!--
+  RICERCA AP
+  Created by Assunta Scotto. Copyright (c) 2026 Assunta Scotto. All rights reserved.
+  First built November 2026. Version 2.0, November 10, 2026.
+  This notice stays with every copy of this file.
+-->
+<style>
+:root{
+  --bg:#FFFFFF; --soft:#F2F5FA; --ink:#16202E; --muted:#4B5567; --line:#C3CAD6;
+  --accent:#1D4ED8; --accent-dark:#1E3A8A; --accent-soft:#E8EEFC;
+  --good:#166534; --good-soft:#E3F3E8; --warn:#92400E; --warn-soft:#FDF0D9; --bad:#B42318; --bad-soft:#FCE9E6;
+  --r:8px;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", Arial, sans-serif;
+}
+*{box-sizing:border-box}
+html{font-size:17px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.5}
+[hidden]{display:none!important}
+a{color:var(--accent)} a:hover{color:var(--accent-dark)}
+h1{font-size:1.75rem;line-height:1.2;margin:0}
+h2{font-size:1.2rem;line-height:1.3;margin:0}
+h3{font-size:1rem;margin:0}
+p{margin:0}
+.it{font-style:normal}
+.muted{color:var(--muted)}
+.small{font-size:.88rem}
+
+/* top bar */
+.top{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:2px solid var(--ink)}
+.top-in{max-width:1320px;margin:0 auto;padding:6px 20px;display:flex;flex-wrap:wrap;align-items:center;gap:4px 18px}
+.brand{font-weight:700;font-size:1rem;white-space:nowrap}
+.nav{display:flex;flex-wrap:wrap;gap:2px;align-items:center}
+.nav .grp{font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 2px 0 12px;padding-left:12px;border-left:1px solid var(--line);line-height:24px}
+.nav .grp:first-child{margin-left:0;padding-left:0;border-left:none}
+.nav a{display:inline-flex;align-items:center;min-height:44px;padding:0 9px;border-radius:var(--r);text-decoration:none;color:var(--ink);font-size:.84rem;border:1px solid transparent;white-space:nowrap}
+.nav a:hover{background:var(--soft)}
+.nav a.on{background:var(--accent);color:#fff;font-weight:600}
+
+main{max-width:1240px;margin:0 auto;padding:24px 20px 40px}
+#app,#printonly{display:flex;flex-direction:column;gap:20px}
+.head{display:flex;flex-direction:column;gap:6px}
+.langrule{font-size:.8rem;color:var(--muted)}
+.goalrow{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,1fr);gap:20px}
+@media (max-width:860px){.goalrow{grid-template-columns:1fr}}
+.eyebrow{font-size:.78rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.lead{color:var(--muted);max-width:75ch}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:start}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+@media (max-width:860px){.grid2,.grid3{grid-template-columns:1fr}}
+.panel{border:1.5px solid var(--line);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.panel.soft{background:var(--soft);border-color:transparent}
+.panel.key{border:2px solid var(--accent)}
+.stack{display:flex;flex-direction:column;gap:14px;min-width:0}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.between{justify-content:space-between}
+.itbox{background:var(--soft);border-radius:var(--r);padding:10px 12px}
+.key .itbox{background:var(--accent-soft)}
+.note{background:var(--warn-soft);color:#5B2C06;border-radius:var(--r);padding:10px 14px;font-size:.92rem}
+.info{background:var(--accent-soft);border-radius:var(--r);padding:10px 14px;font-size:.92rem}
+
+/* controls */
+button,.btn{font:inherit;min-height:46px;padding:0 16px;border-radius:var(--r);border:1.5px solid var(--ink);background:var(--bg);color:var(--ink);cursor:pointer;font-size:.95rem;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+button:hover,.btn:hover{background:var(--soft);color:var(--ink)}
+button.primary,.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+button.primary:hover,.btn.primary:hover{background:var(--accent-dark);border-color:var(--accent-dark);color:#fff}
+button.sel{background:var(--accent-soft);border-color:var(--accent);border-width:2px;font-weight:600}
+button:disabled{opacity:.45;cursor:not-allowed}
+button.quiet,.btn.quiet{border-color:var(--line);min-height:44px;font-size:.88rem}
+button.danger{border-color:var(--bad);color:var(--bad)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+label.f{display:flex;flex-direction:column;gap:6px;font-weight:600;font-size:.92rem;min-width:0}
+label.f span.h{font-weight:400;color:var(--muted)}
+label.f .itl{font-weight:400;color:var(--muted);font-size:.85rem}
+input[type=text],textarea,select{font:inherit;font-size:1.05rem;line-height:1.5;color:var(--ink);background:var(--bg);border:1.5px solid var(--ink);border-radius:var(--r);padding:10px 12px;width:100%}
+input[type=text],select{min-height:48px}
+textarea{min-height:120px;resize:vertical}
+textarea.tall{min-height:190px}
+textarea.short{min-height:84px}
+input[type=checkbox],input[type=radio]{width:22px;height:22px;accent-color:var(--accent);flex:none}
+.chk{display:flex;gap:12px;align-items:center;min-height:46px;padding:4px 0;border-bottom:1px solid var(--line)}
+.chk:last-of-type{border-bottom:none}
+.tabs{display:flex;gap:8px;flex-wrap:wrap}
+.tabs button{flex:1 1 160px}
+.pill{display:inline-block;padding:3px 10px;border-radius:99px;font-size:.78rem;font-weight:600;border:1px solid var(--line);color:var(--muted)}
+.site .pill{white-space:nowrap}
+.pill.school{background:var(--good-soft);color:var(--good);border-color:transparent}
+.pill.home{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.fb{border-radius:var(--r);padding:12px 14px}
+.fb.ok{background:var(--good-soft);color:#0E3F21}
+.fb.no{background:var(--bad-soft);color:#6E150D}
+.fb.mid{background:var(--warn-soft);color:#5B2C06}
+.navfoot{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:16px}
+
+/* exam bar */
+.exam{display:flex;gap:6px;flex-wrap:wrap}
+.exam div{border:1.5px solid var(--line);border-radius:var(--r);padding:10px 12px;font-size:.9rem;min-width:130px}
+.exam div.proj{border:2px solid var(--accent);background:var(--accent-soft)}
+details{border:1px solid var(--line);border-radius:var(--r);background:var(--bg)}
+details>summary{cursor:pointer;padding:12px 14px;font-weight:600;min-height:46px;list-style-position:inside}
+details>div{padding:0 14px 14px;display:flex;flex-direction:column;gap:8px}
+table{border-collapse:collapse;width:100%}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top;font-size:.92rem}
+th{background:var(--soft)}
+.tablewrap{overflow-x:auto}
+.lvl{display:grid;grid-template-columns:70px 1fr;gap:6px 12px;font-size:.92rem}
+.lvl b{white-space:nowrap}
+
+/* sites */
+.site{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.site:last-child{border-bottom:none}
+.query{font-family:ui-monospace,Menlo,Consolas,monospace;background:var(--soft);border-radius:var(--r);padding:10px 12px;font-size:.92rem;word-break:break-word}
+
+/* fake source page */
+.fake{border:1.5px solid var(--ink);border-radius:var(--r);overflow:hidden;background:#fff}
+.fake .url{background:var(--soft);padding:8px 12px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.8rem;color:var(--muted);border-bottom:1px solid var(--line)}
+.fake .pg{padding:16px;display:flex;flex-direction:column;gap:10px}
+.fake .site-name{font-weight:700;font-size:.85rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.fake h3{font-size:1.25rem;line-height:1.25}
+.fake .by{font-size:.85rem;color:var(--muted)}
+
+/* PPR */
+.pprrow{display:grid;grid-template-columns:130px 1fr 64px;gap:10px;align-items:center}
+.pprrow .cnt{font-variant-numeric:tabular-nums;text-align:right;font-weight:600}
+.pprrow .cnt.over{color:var(--bad)}
+.pprmsg{grid-column:2 / 4;font-size:.85rem;color:var(--warn)}
+@media (max-width:600px){.pprrow{grid-template-columns:1fr 56px}.pprrow>label{grid-column:1 / 3}.pprmsg{grid-column:1 / 3}}
+.clock{font-size:3rem;font-weight:700;font-variant-numeric:tabular-nums;line-height:1;text-align:center}
+.clockbox{background:var(--soft);border-radius:var(--r);padding:16px;text-align:center;display:flex;flex-direction:column;gap:6px}
+.clockbox.live{background:var(--bad-soft)}
+.clockbox.live .clock{color:var(--bad)}
+.rec{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.rec:last-child{border-bottom:none}
+.rec audio{height:40px;max-width:100%}
+.rec .t{flex:1 1 180px;font-size:.9rem}
+.scores{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.crit{display:grid;grid-template-columns:minmax(0,5fr) auto minmax(0,6fr);gap:12px;align-items:start;padding:12px 0;border-bottom:1px solid var(--line)}
+.crit:last-child{border-bottom:none}
+.crit .marks{display:flex;flex-direction:column;gap:4px}
+.crit .marks label{display:flex;gap:8px;align-items:center;font-size:.9rem;min-height:44px;white-space:nowrap}
+.crit textarea{min-height:84px}
+@media (max-width:860px){.crit{grid-template-columns:1fr}}
+.steps{display:flex;gap:8px;flex-wrap:wrap}
+.steps div{flex:1 1 90px;text-align:center;padding:10px;border:1.5px solid var(--line);border-radius:var(--r);font-size:.9rem}
+.steps div.now{border:2px solid var(--accent);background:var(--accent-soft);font-weight:700}
+.steps div.done{background:var(--good-soft);border-color:transparent}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{padding:6px 10px;border:1px solid var(--line);border-radius:var(--r);font-size:.88rem}
+.chip.key{border:2px solid var(--accent)}
+.factor{text-align:left;justify-content:flex-start;flex-direction:column;align-items:flex-start;padding:10px 12px;height:100%;gap:2px}
+.factor small{font-weight:400;color:var(--muted);font-size:.8rem}
+.printval{display:none}
+
+@media print{
+  .top,.noprint,button,.btn,#alert,.lock{display:none!important}
+  html{font-size:12pt}
+  main{padding:0;max-width:none}
+  .panel{break-inside:avoid;border-color:#888}
+  .panel.soft{background:none;border:1px solid #888}
+  textarea,input[type=text],select{display:none!important}
+  .printval{display:block;border:1px solid #888;border-radius:4px;padding:8px 10px;min-height:2.6em;white-space:pre-wrap;font-weight:400}
+  .printval.big{min-height:9em}
+  details{border:none} details>summary{display:none}
+  a{color:inherit;text-decoration:none}
+}
+
+/* ===== version 2 ===== */
+h1:focus{outline:none}
+.top{top:env(safe-area-inset-top,0px)}
+.preview{background:var(--warn-soft);color:#5B2C06;padding:10px 16px;font-size:.88rem;text-align:center}
+.status{font-size:.8rem;color:var(--muted);white-space:nowrap;margin-left:auto}
+.status.ok{color:var(--good)}
+.status.bad{color:var(--bad);font-weight:700}
+.modepill{white-space:nowrap}
+.menubtn{display:none}
+.alert{background:var(--bad-soft);color:#6E150D;padding:10px 20px;display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:center;font-size:.92rem;border-bottom:1.5px solid var(--bad)}
+.lock{position:fixed;inset:0;z-index:100;background:rgba(22,32,46,.75);display:flex;align-items:center;justify-content:center;padding:20px}
+.lock .panel{background:var(--bg);max-width:480px}
+.seg{display:inline-flex;border:1.5px solid var(--ink);border-radius:var(--r);overflow:hidden}
+.seg button{border:none;border-radius:0;min-height:44px}
+.seg button.sel{background:var(--accent);color:#fff;font-weight:600;border-width:0}
+.credit{margin-top:32px;padding-top:14px;border-top:1px solid var(--line);font-size:.78rem;color:var(--muted);display:flex;flex-direction:column;gap:4px}
+.printhead,#printonly{display:none}
+.livebar{display:flex;flex-direction:column;gap:10px}
+.qrow{display:flex;gap:10px;align-items:center}
+.qrow .query{flex:1;min-width:0}
+.chk{font-size:.92rem}
+
+/* ----- narrow screens: one "Menu" button instead of ten links ----- */
+@media (max-width:860px){
+  .top-in{flex-wrap:nowrap;gap:8px;padding:6px max(16px,env(safe-area-inset-right,0px)) 6px max(16px,env(safe-area-inset-left,0px))}
+  .brand{overflow:hidden;text-overflow:ellipsis;min-width:0}
+  .status{margin-left:auto}
+  .menubtn{display:inline-flex;min-height:44px;font-weight:600;white-space:nowrap;padding:0 12px}
+  .nav{display:none;position:absolute;left:0;right:0;top:100%;background:var(--bg);border-bottom:2px solid var(--ink);padding:6px 16px 14px;flex-direction:column;align-items:stretch;flex-wrap:nowrap;gap:2px;max-height:calc(100vh - 62px);max-height:calc(100dvh - 62px);overflow-y:auto;box-shadow:0 14px 24px rgba(22,32,46,.2)}
+  .top.open .nav{display:flex}
+  .nav .grp{margin:10px 0 2px;padding:0;border:none;line-height:1.5}
+  .nav .grp:first-child{margin-top:4px}
+  .nav a{min-height:48px;font-size:1rem;padding:0 12px}
+  main{padding:16px max(16px,env(safe-area-inset-right,0px)) 24px max(16px,env(safe-area-inset-left,0px))}
+  .livebar{position:sticky;top:calc(58px + env(safe-area-inset-top,0px));z-index:10;background:var(--bg);padding:8px 0 10px;box-shadow:0 10px 12px -10px rgba(22,32,46,.45)}
+  .livebar .steps{flex-wrap:nowrap;gap:4px}
+  .livebar .steps div{flex:1 1 0;padding:6px 2px;font-size:.78rem}
+  .crit .marks{flex-direction:row;flex-wrap:wrap;gap:8px}
+  .crit .marks label{border:1.5px solid var(--line);border-radius:var(--r);padding:0 14px;min-height:46px;white-space:normal}
+  .crit .marks label:has(input:checked){border-color:var(--accent);background:var(--accent-soft);font-weight:600}
+}
+@media (max-width:600px){
+  h1{font-size:1.45rem}
+  .modepill{display:none}
+  .head .row.between{gap:4px}
+  .panel{padding:14px}
+  .clock{font-size:2.3rem}
+  .clockbox{padding:10px}
+  .livebar .row{flex-wrap:nowrap}
+  .livebar .row button{flex:1 1 0;min-width:0;white-space:normal;line-height:1.15;padding:4px 8px;font-size:.9rem}
+  body.busy .navfoot{display:none}
+  .navfoot{position:sticky;bottom:0;z-index:9;background:var(--bg);margin:0 -16px;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));border-top:2px solid var(--ink);flex-wrap:nowrap}
+  .navfoot>.row{flex:0 0 auto}
+  .navfoot [data-act=print],.navfoot>span{display:none}
+  .navfoot .btn{min-height:48px}
+  .navfoot .btn.primary{flex:1 1 auto;min-width:0;white-space:normal;text-align:center;line-height:1.2;padding:4px 12px}
+  .qrow{flex-wrap:wrap}
+  .qrow .btn,.qrow button{flex:1 1 100%}
+  .site{flex-direction:column;align-items:flex-start;gap:6px}
+  .tabs button{flex:1 1 100%}
+  .rec audio{flex:1 1 100%}
+}
+/* ----- phone: sections of the long pages open and close ----- */
+@media screen and (max-width:700px){
+  .fold>.foldhead{cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:44px;margin:-4px 0;flex-wrap:nowrap}
+  .fold>.foldhead::after{content:"+";font-size:1.6rem;line-height:1;font-weight:400;color:var(--accent);flex:none;width:28px;text-align:center}
+  .fold.open>.foldhead::after{content:"–"}
+  .fold:not(.open)>:not(.foldhead){display:none}
+  .fold:not(.open){padding-top:10px;padding-bottom:10px}
+}
+@media print{
+  .printhead{display:block;border-bottom:1.5px solid #000;padding-bottom:6px;margin-bottom:12px;font-size:10.5pt;line-height:1.6}
+  body[data-print=only] #app{display:none!important}
+  body[data-print=only] #printonly{display:flex}
+  button.factor.sel{display:flex!important;border:1.5px solid #000;background:none;color:#000}
+  .livebar{position:static;box-shadow:none}
+  .credit{font-size:8pt;margin-top:16px}
+  .seg{display:none}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-in">
+    <div class="brand">Ricerca AP</div>
+    <span class="pill modepill" id="modepill" hidden></span>
+    <nav class="nav" id="nav" aria-label="Screens"></nav>
+    <span class="status" id="savest" role="status" aria-live="polite"></span>
+    <button class="menubtn" id="menubtn" data-act="menu" aria-expanded="false" aria-controls="nav">Menu</button>
+  </div>
+</header>
+<div id="alert"></div>
+<main>
+  <div class="printhead" id="printhead"></div>
+  <div id="app"></div>
+  <div id="printonly"></div>
+  <footer class="credit" data-author="Assunta Scotto" data-created="2026-11">
+    <div><b>Ricerca AP</b> · &copy; 2026 Assunta Scotto. All rights reserved. Created by Assunta Scotto, November 2026.</div>
+    <div>The feedback-form criteria, the research-plan and source-card headings and the sample SMART goal come from College Board's AP World Language and Culture Course Project classroom resources (&copy; 2026 College Board) and are used here for classroom practice.</div>
+    <div>AP&reg; is a trademark registered by the College Board, which is not affiliated with, and does not endorse, this app.</div>
+  </footer>
+</main>
+<noscript><p style="padding:20px">Ricerca AP needs JavaScript. Created by Assunta Scotto, &copy; 2026.</p></noscript>
+<script>
+"use strict";
+/* =====================================================================
+   RICERCA AP
+   Created by Assunta Scotto. Copyright (c) 2026 Assunta Scotto. All rights reserved.
+   First built November 2026 for her AP Italian Language and Culture classes.
+   This notice stays with every copy of this file.
+   =====================================================================
+   YEAR PACK: the ONLY part that changes from one year to the next.
+
+   EVERY NEW SCHOOL YEAR: replace this whole block (from "const PACK" to
+   "END OF YEAR PACK") with the new year's block. Give it a new id.
+   Students' saved work is stored per id, so a new id starts clean.
+
+   IN JANUARY, when College Board releases the real packet: fill in "real"
+   (same shape as "practice": title, prompt, factors, reflection, and a
+   qbank if you have one). Students then get a Practice / Real switch, and
+   each side keeps its own plan, source cards, PPR and recordings.
+
+   siteLabels: "school" (opens at school) | "home" (home only) | "untested"
+   ===================================================================== */
+const PACK = {
+  id: "2027-musica",
+  themeName: "Musica",
+  themeEn: "music",
+  dates: { packet: "January 2027", pprDue: "April 30, 2027", pprDueTime: "11:59 PM ET", exam: "May 3, 2027" },
+  pprBoxWords: 10,
+  siteLabels: {
+    treccani: "untested", ilpost: "untested", raicultura: "untested", icpi: "untested", wikipedia: "untested",
+    raiplaysound: "untested", canzoneitaliana: "untested", icpiaudio: "untested", ilpostpodcast: "untested", youtube: "untested",
+    istat: "untested", fimi: "untested", siae: "untested"
+  },
+  themeSites: [
+    { cat: "listen", k: "canzoneitaliana", name: "Portale della Canzone Italiana", url: "https://www.canzoneitaliana.it/", d: "A Ministry of Culture archive of recordings, searchable by period and place." },
+    { cat: "data", k: "fimi", name: "FIMI", url: "https://www.fimi.it/", d: "The Italian music industry federation: sales charts and market reports." },
+    { cat: "data", k: "siae", name: "SIAE", url: "https://www.siae.it/", d: "The authors' society: yearly reports on concerts and shows." }
+  ],
+  practice: {
+    title: "La musica e l'identità di una comunità",
+    prompt: {
+      it: "Immagina che la tua scuola organizzi un festival culturale. Il comitato organizzatore vuole includere la musica di una comunità o regione di lingua italiana. Scegli una comunità e fai una ricerca approfondita sulla sua musica. In base alla tua ricerca, prepara una presentazione per il comitato, spiegando perché quella musica merita un posto nel festival. Non dimenticare di includere nella tua presentazione almeno tre dei seguenti fattori e di spiegarli usando informazioni tratte dalle fonti che hai consultato durante la tua ricerca. La tua presentazione non deve superare i tre minuti.",
+      en: "Imagine that your school is organizing a cultural festival. The organizing committee wants to include the music of an Italian-speaking community or region. Choose a community and research its music in depth. Based on your research, prepare a presentation for the committee explaining why that music deserves a place in the festival. Remember to include at least three of the following factors in your presentation and to explain them using information from the sources you consulted during your research. Your presentation must not exceed three minutes."
+    },
+    factors: [
+      { id: 1, group: "pp", name: "Strumenti, canzoni e generi", ex: "Strumenti tradizionali; generi musicali; canzoni in dialetto" },
+      { id: 2, group: "pp", name: "Luoghi ed eventi", ex: "Festival; piazze; concerti; radio e televisione" },
+      { id: 3, group: "pp", name: "Trasmissione della musica", ex: "Famiglia; scuole di musica; gruppi e bande; registrazioni e archivi" },
+      { id: 4, group: "pp", name: "Musica e vita quotidiana", ex: "Lavoro; feste religiose; turismo" },
+      { id: 5, group: "persp", name: "Musica e identità", ex: "Orgoglio del luogo; lingua e dialetto; radici" },
+      { id: 6, group: "persp", name: "Tradizione e innovazione", ex: "Puristi e sperimentatori; artisti nuovi; pubblico giovane" }
+    ],
+    reflection: [
+      "Perché pensi che la musica sia importante per l'identità di una comunità?",
+      "Se potessi presentare la musica di una comunità di lingua italiana, quale sceglieresti? Perché?",
+      "Quali differenze o somiglianze hai notato tra il ruolo della musica in Italia e quello nella tua comunità?",
+      "Fai una riflessione sui prodotti, sulle pratiche e sulle prospettive culturali che emergono dalle fonti fornite. In che modo sono simili o diversi rispetto a quelli della tua comunità?"
+    ],
+    /* Practice questions. None names a community, a genre or an artist. */
+    qbank: {
+      pref: [
+        "Tra le fonti che hai consultato, quale hai preferito e perché?",
+        "Quale aspetto della musica di questa comunità ti piace di più? Perché?",
+        "Se potessi assistere dal vivo a un solo evento musicale di questa comunità, quale sceglieresti e perché?",
+        "Preferisci la musica tradizionale di questa comunità o le sue forme più moderne? Spiega la tua scelta.",
+        "Se potessi continuare la ricerca, quale parte dell'argomento vorresti approfondire?"
+      ],
+      opin: [
+        "Secondo te, perché la musica è così importante per l'identità di questa comunità?",
+        "Pensi che i giovani di questa comunità tengano ancora alla musica tradizionale? Su che cosa basi la tua opinione?",
+        "A tuo parere, mescolare tradizione e musica moderna è un bene o un rischio? Perché?",
+        "Secondo te, quale delle tue fonti era la più affidabile? Come l'hai capito?",
+        "Credi che il turismo aiuti o danneggi la musica di questa comunità? Spiega perché."
+      ],
+      cons: [
+        "Che cosa consiglieresti a una persona che vuole scoprire la musica di questa comunità per la prima volta?",
+        "Quali consigli daresti a un compagno che deve fare una ricerca simile alla tua?",
+        "Che cosa dovrebbe fare la comunità per trasmettere la sua musica ai più giovani?",
+        "Il comitato vuole invitare dei musicisti al festival: che tipo di gruppo gli consiglieresti di cercare?",
+        "Come consiglieresti di presentare questa musica a un pubblico che non capisce l'italiano?"
+      ],
+      info: [
+        "Puoi spiegare meglio come hai trovato e scelto le tue fonti?",
+        "Puoi descrivere uno strumento, una canzone o un genere tipico di questa comunità?",
+        "In quali luoghi o in quali occasioni si ascolta di solito questa musica?",
+        "Come si impara questa musica nella comunità che hai scelto?",
+        "Qual è stata la difficoltà più grande durante la ricerca e come l'hai risolta?"
+      ],
+      emoz: [
+        "Che cosa hai provato quando hai ascoltato questa musica per la prima volta?",
+        "C'è un'informazione che ti ha sorpreso durante la ricerca? Quale, e perché?",
+        "Quale parte del progetto ti ha dato più soddisfazione?",
+        "Che cosa hai provato quando una fonte era difficile da capire?",
+        "Che cosa ti ha emozionato di più in questo progetto?"
+      ],
+      prev: [
+        "Secondo te, come cambierà la musica di questa comunità nei prossimi vent'anni?",
+        "Pensi che tra cinquant'anni i giovani canteranno ancora queste canzoni? Perché?",
+        "Che effetto avranno le nuove tecnologie sul modo in cui questa musica viene trasmessa?",
+        "Se questa musica entrasse nel festival della scuola, come reagirebbe il pubblico, secondo te?",
+        "Che cosa succederebbe a questa comunità se la sua musica tradizionale scomparisse?"
+      ],
+      conf: [
+        "Quali somiglianze o differenze hai notato tra il ruolo della musica in questa comunità e nella tua?",
+        "Nella tua comunità esiste un evento musicale simile a quelli che hai studiato? In che cosa è diverso?",
+        "Come si impara la musica nella tua comunità, rispetto alla comunità che hai studiato?",
+        "I giovani della tua comunità ascoltano la musica nello stesso modo dei giovani della comunità che hai scelto? Spiega.",
+        "Confronta l'importanza della lingua locale o del dialetto nella musica delle due comunità."
+      ],
+      rifl: [
+        "Che cosa rivela questa musica sui valori della comunità che hai scelto?",
+        "Scegli una pratica musicale che hai studiato: quale idea o quale valore della comunità mostra?",
+        "Perché, secondo te, questa comunità considera importante conservare la sua musica?",
+        "In che modo uno strumento o una canzone che hai studiato riflette la storia o le convinzioni della comunità?",
+        "Che rapporto c'è tra il modo in cui si trasmette questa musica e ciò che la comunità pensa della famiglia o della tradizione?"
+      ]
+    },
+    /* Practice packet sources (made up for practice; see packetNote) */
+    packet: [
+      { n: 1, kind: "Articolo", intro: "In quest'articolo si parla di come l'Italia conserva la sua musica. Il testo è stato scritto per esercitazione, con informazioni del Ministero della Cultura, dell'Istituto Centrale per il Patrimonio Immateriale e del giornale Il Post.",
+        title: "La musica italiana entra in archivio", real: "Written for practice; every fact comes from a real page.",
+        body: ["In Italia la musica non si ascolta soltanto: si conserva. Nel dicembre 2023 l'UNESCO ha dichiarato il canto lirico italiano patrimonio culturale immateriale dell'umanità. Per molti italiani è stato un motivo di orgoglio, perché l'opera è nata in Italia e si canta in italiano nei teatri di tutto il mondo.",
+          "Ma il patrimonio musicale non è fatto solo di teatri. L'Istituto Centrale per il Patrimonio Immateriale, che dipende dal Ministero della Cultura, raccoglie sul suo sito le tradizioni di molte regioni. Nella pagina dedicata al Piemonte, per esempio, si trovano canti popolari conservati negli archivi della Rai e una trasmissione radiofonica del 1957 con cori del Piemonte e della Valle d'Aosta.",
+          "Anche la canzone moderna ha il suo archivio. Nel 2018 il Ministero ha presentato il Portale della Canzone Italiana, con oltre 200.000 brani da ascoltare gratuitamente: un viaggio di cento anni, dalle orchestre jazz degli anni Venti fino al rock e ai cantautori.",
+          "Perché tanto lavoro? L'idea è semplice: una canzone racconta un luogo e un'epoca meglio di molte pagine di storia. Conservarla significa permettere ai giovani di sapere da dove vengono."] },
+      { n: 2, kind: "Articolo", intro: "In quest'articolo una studentessa racconta come ha imparato la musica. Testo inventato, scritto per esercitazione. Pubblicazione immaginaria: il giornalino di un liceo.",
+        title: "A casa mia si canta a tavola", real: "Invented. The person does not exist.",
+        body: ["Mi chiamo Giulia, ho diciassette anni e vivo in un piccolo paese di montagna. A casa mia nessuno è musicista, ma tutti cantano. La domenica, dopo il pranzo, mio nonno comincia una canzone in dialetto e gli altri lo seguono. Io ho imparato così, a orecchio, senza leggere una nota.",
+          "A scuola è diverso. Nell'ora di musica studiamo il flauto e la storia dei compositori. È utile, ma è un'altra cosa: lì la musica è una materia, a casa è un'abitudine.",
+          "Da due anni suono anche il clarinetto nella banda del paese. Proviamo il giovedì sera nella vecchia scuola elementare. Ci sono ragazzi di quattordici anni e signori di settanta. I più anziani ci insegnano i pezzi che suonavano da giovani, per la festa del santo patrono e per le processioni.",
+          "I miei amici ascoltano soprattutto rap e musica elettronica con il telefono, e anch'io. Però ho notato una cosa: quando la banda suona in piazza, vengono anche loro. Forse la musica tradizionale non è la nostra musica di tutti i giorni, ma è quella che ci fa sentire del paese.",
+          "Mia nonna dice che una canzone che nessuno canta più è come una casa chiusa. Io non voglio che la nostra chiuda."] },
+      { n: 3, kind: "Tabella", intro: "In questa tabella si parla degli italiani che vanno ai concerti. I dati originali sono stati pubblicati in Italia dall'Istat, l'Istituto nazionale di statistica, nell'Annuario statistico italiano 2025. Si riferiscono al 2024.",
+        title: "Persone che sono andate a un concerto almeno una volta in un anno", real: "Real figures from Istat.",
+        table: [["", "Concerti di musica classica", "Altri concerti"], ["Popolazione di 6 anni e più", "10,8%", "24,7%"], ["Giovani di 18–24 anni", "17,4%", "48,5%"]] },
+      { n: 4, kind: "Tabella", intro: "In questa tabella si parla di chi ascolta la radio in Italia. I dati originali sono stati pubblicati dall'Istat nell'Annuario statistico italiano 2025. Si riferiscono al 2024.",
+        title: "Persone di 3 anni e più che ascoltano la radio", real: "Real figures from Istat.",
+        table: [["Gruppo", "Percentuale"], ["Italia", "57,9%"], ["Uomini", "60,2%"], ["Donne", "55,7%"], ["Nord", "circa 59%"], ["Centro", "57,8%"], ["Sud", "55,6%"], ["Isole", "57,9%"]] },
+      { n: 5, kind: "Audio", audio: true, intro: "In questa presentazione il maestro di una banda musicale spiega come funziona la banda del suo paese. Testo inventato, scritto per esercitazione.",
+        title: "", real: "Invented. The person does not exist.",
+        body: ["Buonasera a tutti e grazie di essere venuti. Mi chiamo Franco e dirigo la banda del nostro paese da ventidue anni. Stasera vi spiego in pochi minuti chi siamo e perché cerchiamo nuovi musicisti.",
+          "La banda esiste da più di un secolo. All'inizio era formata da contadini e artigiani che suonavano la sera, dopo il lavoro. Oggi siamo in trentacinque: studenti, impiegati, pensionati. Il più giovane ha dodici anni, il più anziano settantotto.",
+          "Suoniamo soprattutto in tre occasioni: la festa del santo patrono, le processioni e il concerto di Natale. Quando suoniamo per strada, la gente esce di casa e ci segue. Per molti, quella musica è il suono della festa.",
+          "Chi entra nella banda non paga niente. Lo strumento lo presta la banda, e le lezioni le danno i musicisti più esperti. In cambio chiediamo una cosa sola: venire alle prove ogni giovedì.",
+          "Negli ultimi anni abbiamo aggiunto al programma anche colonne sonore e canzoni moderne, perché i ragazzi le chiedevano. Qualcuno ha protestato, ma io penso che una banda debba suonare la musica della sua gente, quella di ieri e quella di oggi. Vi aspettiamo giovedì."] },
+      { n: 6, kind: "Audio", audio: true, intro: "In quest'intervista una giornalista parla con un giovane musicista che canta in dialetto su musica elettronica. Testo inventato, scritto per esercitazione.",
+        title: "", real: "Invented. The people do not exist.",
+        body: ["Giornalista: Marco, tu canti in dialetto su basi elettroniche. Perché questa scelta?",
+          "Marco: Perché il dialetto è la lingua di casa mia. Con gli amici parlo italiano, ma mia madre mi sgrida in dialetto. Mi sembrava strano cantare in una lingua diversa da quella dei miei sentimenti.",
+          "Giornalista: Alcuni dicono che così rovini la tradizione.",
+          "Marco: Lo so. Dopo un concerto un signore mi ha detto: «Queste non sono le nostre canzoni». Gli ho risposto che anche suo nonno, da giovane, cantava canzoni nuove. La tradizione di oggi era la novità di ieri.",
+          "Giornalista: E il pubblico giovane capisce le parole?",
+          "Marco: Non tutte. Però dopo i concerti molti ragazzi mi scrivono per chiedere che cosa significa una parola. Poi vanno a chiederlo ai nonni. Per me questo è il risultato più bello.",
+          "Giornalista: Che cosa ti manca per vivere di musica?",
+          "Marco: I posti dove suonare. Nelle grandi città ci sono i locali, nel mio paese c'è solo la piazza d'eP(). Per questo registro tutto e lo metto in rete: la mia piazza, per ora, è il telefono della gente."] }
+    ],
+    packetNote: `<b>What is real and what is invented.</b> Fonte 1 was written for practice from real pages. Fonti 3 and 4 are real Istat figures. Fonti 2, 5 and 6 are invented: the people in them do not exist. Do not cite invented sources in your real project.`,
+    facts: `UNESCO recognition of Italian opera singing, December 2023: <a target="_blank" rel="noopener" href="https://www.ilpost.it/2023/12/06/canto-lirico-italia-patrimonio-culturale-immateriale-umanita-unesco/">Il Post</a>. Piedmont folk songs and the 1957 broadcast: <a target="_blank" rel="noopener" href="https://icpi.cultura.gov.it/?p=1129">ICPI</a>. Portale della Canzone Italiana, 2018, over 200,000 tracks: from the title of a Ministry of Culture announcement. Concert and radio figures for 2024: <a target="_blank" rel="noopener" href="https://www.istat.it/storage/ASI/2025/capitoli/C10.pdf">Istat, Annuario statistico italiano 2025, chapter 10</a>.`
+  },
+  real: null
+};
+/* ========================= END OF YEAR PACK ========================= */
+
+const ROUTES = [
+  { id: "start", grp: "Skills", nav: "Start", title: "The exam and the rubric" },
+  { id: "trep", grp: "Skills", nav: "1 Three P's", title: "The three P's" },
+  { id: "dove", grp: "Skills", nav: "2 Where to look", title: "Where to look" },
+  { id: "fidarsi", grp: "Skills", nav: "3 Trust it?", title: "Can I trust it?" },
+  { id: "scheda", grp: "Skills", nav: "4 Source card", title: "Source card and citing" },
+  { id: "piano", grp: "My project", nav: "Research plan", title: "Research plan" },
+  { id: "ppr", grp: "My project", nav: "PPR", title: "PPR and presentation" },
+  { id: "qa", grp: "My project", nav: "Q&amp;A", title: "Q&A simulator" },
+  { id: "pacchetto", grp: "More", nav: "Packet", title: "Practice packet" },
+  { id: "lavoro", grp: "More", nav: "Save &amp; print", title: "Save and print my work" }
+];
+
+const RUBRIC_PRES = [
+  { key: "task", name: "Task", max: 2, tag: "three factors explained with details", research: true, lv: [
+    "Does not address the prompt, only restates it, or lists factors with no explanation.",
+    "Three or more factors with little or no detail, OR one or two factors explained with detail. Relies on personal stories or general knowledge.",
+    "Explains three or more factors with relevant details: specific examples and information from research." ] },
+  { key: "culture", name: "Culture", max: 2, tag: "product or practice → perspective", research: true, lv: [
+    "Little or no relevant cultural example, or the cultural information is clearly wrong.",
+    "Relevant examples of products, practices or perspectives, but not specific, or with no link between a perspective and a product or practice.",
+    "Specific examples that show how products or practices reflect perspectives (values, beliefs, attitudes)." ],
+    ex: { one: "«Al bar molti italiani bevono il caffè in piedi.»", two: "«Al bar molti italiani bevono il caffè in piedi e scambiano due parole con il barista: questa abitudine mostra che la pausa, anche brevissima, è un momento per stare con gli altri.»" } },
+  { key: "org", name: "Organization", max: 2, tag: "introduction, connectors, conclusion", research: true, lv: [
+    "No clear organization; hard to follow.",
+    "Some ideas connect, but the order is not always logical. May lack an introduction or conclusion. Few connectors, or the same ones repeated.",
+    "Logical order from start to finish, with an introduction and a conclusion and a variety of connectors used naturally." ] },
+  { key: "lang", name: "Language", max: 3, tag: "varied and accurate", research: false, lv: [
+    "Errors make it impossible or nearly impossible to understand; single words or phrases.",
+    "Vocabulary too limited for the topic; a few basic structures; errors get in the way.",
+    "A range of vocabulary and basic structures; errors occasionally get in the way.",
+    "Wide variety of vocabulary, culturally relevant expressions and varied grammar; errors do not get in the way." ] },
+  { key: "delivery", name: "Delivery", max: 2, tag: "not read, not recited from memory", research: false, lv: [
+    "Pronunciation or intonation blocks understanding; monotone; sounds read or recited; frequent fillers.",
+    "Pace and intonation somewhat engaging; hesitant or choppy at times; generally clear pronunciation.",
+    "Pace and intonation that engage the listener; smooth and confident, little hesitation; clear pronunciation." ] }
+];
+const RUBRIC_QA = [
+  { key: "task", name: "Task", max: 2, tag: "answer at least 3 of the 4 questions well", research: true, lv: [
+    "Barely addresses the questions, is irrelevant, or only repeats them.",
+    "Keeps the exchange going, but only one or two answers are appropriate.",
+    "Appropriate answers with the requested information for at least three of the four questions. Minor misunderstandings are fine." ] },
+  { key: "culture", name: "Culture", max: 2, tag: "one comparison or one reflection", research: true, lv: [
+    "Little or no description of products, practices or perspectives in any answer.",
+    "In at least one answer, describes products, practices or perspectives, without explaining.",
+    "In at least one answer, with details and examples: compares with your own or another community, OR reflects on how perspectives relate to products or practices." ] },
+  { key: "lang", name: "Language", max: 3, tag: "varied and accurate", research: false, lv: [
+    "Errors make it impossible or very hard to understand.",
+    "Vocabulary too limited to keep the exchange going; errors get in the way.",
+    "A range of vocabulary and basic structures; errors occasionally get in the way.",
+    "Wide variety of vocabulary and structures; errors do not get in the way; uses strategies such as paraphrasing." ] },
+  { key: "fluency", name: "Fluency", max: 2, tag: "flows naturally", research: false, lv: [
+    "Pronunciation or intonation blocks understanding; frequent fillers or false starts.",
+    "Pace and intonation somewhat effective; disconnected at times; generally clear pronunciation.",
+    "Speech is fluid and automatic; clear pronunciation; natural pauses are fine." ] }
+];
+
+/* College Board practice feedback forms: criteria copied from the Italian forms */
+const CRIT_PRES = [
+  ["Svolgimento del compito", "Risponde in modo completo alla traccia"],
+  ["Svolgimento del compito", "Spiega almeno tre fattori"],
+  ["Svolgimento del compito", "Fornisce dettagli rilevanti (ad esempio, informazioni ricercate, esempi)"],
+  ["Comprensione culturale", "Fornisce esempi specifici di prodotti e/o pratiche culturali basati sulla ricerca svolta per il progetto"],
+  ["Comprensione culturale", "Dimostra la relazione tra prospettive culturali e prodotti e/o pratiche culturali"],
+  ["Organizzazione", "Organizza la presentazione in modo logico (ad esempio, con idee ben collegate, un'introduzione e una conclusione)"],
+  ["Organizzazione", "Include elementi di coesione per organizzare e collegare le idee (ad esempio, connettivi testuali)"],
+  ["Controllo del linguaggio", "Utilizza un lessico vario ed espressioni culturalmente rilevanti per trasmettere chiaramente le idee"],
+  ["Controllo del linguaggio", "Dimostra il controllo di una varietà di strutture grammaticali (ad esempio, usando sia frasi semplici che composte)"],
+  ["Controllo del linguaggio", "Presenta in modo chiaro il proprio lavoro e gli eventuali errori non impediscono la comprensione"],
+  ["Esposizione orale", "Esprime i contenuti in modo chiaro e sicuro, con un ritmo adeguato (poche esitazioni, un numero minimo di pause e/o intercalari)"],
+  ["Esposizione orale", "Esprime i contenuti con una pronuncia chiara e un'intonazione efficace"]
+];
+const CRIT_QA = [
+  ["Svolgimento del compito", "Risponde ad almeno tre delle domande con le informazioni richieste"],
+  ["Comprensione culturale", "In almeno una risposta, fornisce un confronto culturale o riflette sulla relazione tra prospettive culturali e prodotti e/o pratiche culturali"],
+  ["Controllo del linguaggio", "Utilizza un lessico vario ed espressioni idiomatiche per trasmettere pienamente le proprie idee"],
+  ["Controllo del linguaggio", "Dimostra il controllo di una varietà di strutture grammaticali (ad esempio, usando sia frasi semplici che composte)"],
+  ["Controllo del linguaggio", "Risponde alle domande in modo chiaro e gli eventuali errori non impediscono la comprensione"],
+  ["Scorrevolezza", "Utilizza un ritmo del discorso adatto alla comunicazione interpersonale (né troppo rapido né troppo lento, un numero minimo di pause e/o intercalari)"],
+  ["Scorrevolezza", "Utilizza una pronuncia chiara e un'intonazione efficace"]
+];
+const CRIT_RIFL = [
+  ["", "Risponde a tutte e quattro le domande in modo logico e dettagliato"],
+  ["", "Integra informazioni tratte da almeno tre delle fonti iniziali fornite"],
+  ["", "Collega conoscenze o esperienze culturali all'argomento e/o alle domande di riflessione"],
+  ["", "Presenta le idee con una progressione logica e organizzata"],
+  ["", "Utilizza con precisione un lessico vario e strutture grammaticali appropriate"]
+];
+
+/* Three P's sorting cards: everyday Italian life, not music on purpose */
+const CARDS = [
+  { t: "la moka", a: "prodotto", why: "An object people make and use: a product." },
+  { t: "il presepe", a: "prodotto", why: "A thing that is made and displayed: a product. Setting it up every December would be the practice." },
+  { t: "la Costituzione italiana", a: "prodotto", why: "A written text is a product, even though you cannot hold its ideas. The values that inspired it are the perspectives." },
+  { t: "il telegiornale della sera", a: "prodotto", why: "A TV programme is something a culture makes: a product. Watching it together at dinner would be a practice." },
+  { t: "fare la passeggiata in centro la domenica pomeriggio", a: "pratica", why: "Something people do, at a set time and place: a practice." },
+  { t: "pranzare dai nonni la domenica", a: "pratica", why: "A habit people repeat: a practice. Why they keep doing it is the perspective." },
+  { t: "dare del Lei a una persona che non si conosce", a: "pratica", why: "A way of behaving with others: a practice. The idea of respect behind it is the perspective." },
+  { t: "portare un dolce quando si è invitati a cena", a: "pratica", why: "An action, so a practice. The belief that a guest should not arrive empty-handed is the perspective." },
+  { t: "l'idea che il pranzo sia un momento per stare insieme, non solo per mangiare", a: "prospettiva", why: "An idea about what matters. You cannot see it; you work it out from what people do. That is a perspective." },
+  { t: "l'importanza di fare bella figura, cioè di presentarsi bene per rispetto degli altri", a: "prospettiva", why: "A value that explains many products and practices: a perspective." },
+  { t: "l'attaccamento al proprio paese o quartiere", a: "prospettiva", why: "An attitude people share: a perspective. A local festival would be a practice that shows it." },
+  { t: "la convinzione che gli anziani meritino un rispetto particolare", a: "prospettiva", why: "A belief: a perspective. Giving up your seat or using Lei are practices that show it." }
+];
+const PLABEL = { prodotto: "Product · il prodotto", pratica: "Practice · la pratica", prospettiva: "Perspective · la prospettiva" };
+const YESNO = [
+  { t: "Fare la passeggiata in centro la domenica pomeriggio", persp: false, why: "It is an action, so it is a practice. The perspective would be why people do it, for example the value given to seeing and greeting other people." },
+  { t: "Credere che un pasto vada condiviso", persp: true, why: "It is a belief. Nobody can photograph it. That is what a perspective is." },
+  { t: "Andare a messa la notte di Natale", persp: false, why: "Even though it involves religion, going is an action: a practice. The faith or the sense of tradition behind it is the perspective." },
+  { t: "Lo statuto di un'associazione di volontari", persp: false, why: "A written document is a product. The values that inspired it, such as solidarity, are the perspectives." },
+  { t: "Il rispetto per chi è più anziano", persp: true, why: "A value people hold: a perspective. Practices such as using Lei make it visible." },
+  { t: "Salutare tutti quando si entra in un negozio", persp: false, why: "An action: a practice. The idea of politeness behind it is the perspective." }
+];
+
+const SITES = {
+  read: [
+    { k: "treccani", name: "Treccani", url: "https://www.treccani.it/", d: "Encyclopedia and dictionary. Start here for the basics and the key words." },
+    { k: "ilpost", name: "Il Post", url: "https://www.ilpost.it/", d: "Short, clearly written news articles. Good for recent events." },
+    { k: "raicultura", name: "Rai Cultura", url: "https://www.raicultura.it/", d: "The culture pages of Italian public television." },
+    { k: "icpi", name: "ICPI · Patrimonio Immateriale", url: "https://icpi.cultura.gov.it/", d: "Ministry of Culture institute for traditions, region by region." },
+    { k: "wikipedia", name: "Wikipedia in italiano", url: "https://it.wikipedia.org/", d: "A map, not a source: use its footnotes to find the real sources." }
+  ],
+  listen: [
+    { k: "raiplaysound", name: "RaiPlay Sound", url: "https://www.raiplaysound.it/", d: "Radio programmes and podcasts from Italian public radio." },
+    { k: "icpiaudio", name: "ICPI recordings", url: "https://icpi.cultura.gov.it/", d: "Field recordings and old broadcasts inside the ICPI regional pages." },
+    { k: "ilpostpodcast", name: "Il Post podcasts", url: "https://www.ilpost.it/podcasts/", d: "Spoken explanations of the news at a steady pace." },
+    { k: "youtube", name: "YouTube: channels of Italian institutions", url: "https://www.youtube.com/", d: "Search for the official channels of public television (Rai), encyclopedias (Treccani), newspapers (Il Post, Corriere della Sera, la Repubblica), the Ministry of Culture, museums, theatres and universities. You choose the videos. Check who owns the channel before you trust it." }
+  ],
+  data: [
+    { k: "istat", name: "Istat", url: "https://www.istat.it/", d: "Italy's national statistics office: tables and charts on daily life and culture." },
+  ]
+};
+const SITE_LABEL = { school: "Works at school", home: "Home only", untested: "School: not tested" };
+
+/* Six invented pages for the trust exercise. None is about the year's theme. */
+const FAKES = [
+  { url: "www.comune.borgoverde.example/ambiente/raccolta-differenziata-2025", site: "Comune di Borgoverde · Ufficio Ambiente",
+    title: "Raccolta differenziata: i risultati del 2025", by: "Ufficio Ambiente · pubblicato il 14 gennaio 2026",
+    body: ["Nel 2025 il Comune di Borgoverde ha raccolto in modo differenziato il 71% dei rifiuti, contro il 64% dell'anno precedente. I dati provengono dai registri mensili della società che gestisce il servizio e sono consultabili in fondo alla pagina.", "Il miglioramento più forte riguarda l'organico, dopo la consegna dei nuovi contenitori a tutte le famiglie nel mese di marzo. Per informazioni: ufficio.ambiente@comune.borgoverde.example."],
+    ok: ["use"], why: "A public office reporting its own figures, with a date, a named department, a contact and the data behind the numbers. Use it. It can still present its own work kindly, so a second source never hurts.",
+    say: "«Questa fonte è affidabile perché è pubblicata da un ente pubblico e indica da dove vengono i dati.»" },
+  { url: "www.ilcorrieredellavalle.example/cronaca/treni-pendolari", site: "Il Corriere della Valle · Cronaca",
+    title: "Pendolari, un treno su cinque arriva in ritardo", by: "di Marta Ferraris · 3 ottobre 2026",
+    body: ["Secondo il rapporto annuale dell'Osservatorio regionale sui trasporti, nei primi sei mesi dell'anno il 19% dei treni regionali è arrivato con più di cinque minuti di ritardo.", "«Parto alle 6.40 e non so mai a che ora arrivo in ufficio», racconta Paolo Gatti, impiegato, che da dodici anni viaggia sulla stessa linea. L'azienda dei trasporti risponde che i lavori sulla linea finiranno entro la primavera."],
+    ok: ["use"], why: "A named journalist, a recent date, a named report, a quoted person and the other side's reply. Use it.",
+    say: "«Questa fonte è affidabile perché cita un rapporto, riporta testimonianze e ha una data recente.»" },
+  { url: "www.lacucinadiluca.example/blog/vera-carbonara", site: "La cucina di Luca · il mio blog",
+    title: "La vera carbonara: tutti sbagliano tranne me", by: "Luca · nessuna data",
+    body: ["Lo dico da anni: chi mette la panna nella carbonara non ha capito niente. In Italia nessuno la fa così, e chi lo fa non è un vero italiano.", "La ricetta originale è una sola ed è la mia. Non servono libri o studi: basta chiedere a mia nonna. Scrivetemi nei commenti se siete d'accordo!"],
+    ok: ["care", "drop"], why: "One person's opinion, no date, no evidence, and big generalizations («nessuno», «un vero italiano»). It can show that people feel strongly about the topic, but it proves no fact. Use with care or drop it.",
+    say: "«Questa fonte è poco affidabile perché esprime solo l'opinione dell'autore e non presenta prove.»" },
+  { url: "www.frantoiosanrocco.example/perche-il-nostro-olio", site: "Frantoio San Rocco · Shop online",
+    title: "Perché il nostro olio è il migliore d'Italia", by: "Frantoio San Rocco · offerta valida fino a domenica",
+    body: ["Da quattro generazioni produciamo l'olio più buono e più sano d'Italia. Tutti gli esperti sono d'accordo: chi lo prova non torna più indietro.", "Ordina oggi tre bottiglie e ricevi la quarta in regalo. Spedizione gratuita in tutta Europa!"],
+    ok: ["drop", "care"], why: "It exists to sell. «Il migliore» and «tutti gli esperti» have no names and no data. Drop it as a source of facts. At most it shows how a company presents tradition to customers.",
+    say: "«Questa fonte è poco affidabile perché è una pubblicità: vuole vendere, non informare.»" },
+  { url: "www.notizieoggi.example/2009/giovani-e-internet", site: "Notizie Oggi · Tecnologia",
+    title: "I giovani italiani e internet: solo uno su tre ha un profilo social", by: "Redazione · 22 maggio 2009",
+    body: ["Un'indagine condotta su mille studenti delle scuole superiori mostra che solo il 34% ha un profilo su un social network. La maggior parte usa internet soprattutto per la posta elettronica e per le ricerche scolastiche.", "Secondo gli autori dell'indagine, il telefono cellulare serve ancora quasi soltanto per chiamare e mandare messaggi."],
+    ok: ["care", "drop"], why: "It has data and may have been accurate, but it is from 2009. For how young people live today it is useless. It is only good for showing how things have changed. Use with care or drop it.",
+    say: "«Questa fonte va usata con attenzione perché i dati sono del 2009 e la situazione è cambiata.»" },
+  { url: "www.visita-bella-citta.example/it/benvenuto", site: "Visita Bella Città · Guida",
+    title: "Benvenuto a nostra bellissima città!", by: "nessun autore · nessuna data",
+    body: ["Tu puoi visitare molte attrazioni eccitanti in questa città. Le persone locali sono molto amichevoli e amano i turisti. Il cibo è delizioso e tu lo amerai di sicuro.", "Prenota adesso il tuo viaggio di sogno e fai memorie che durano per sempre!"],
+    ok: ["drop"], why: "This is not Italian written for Italians. It reads like a machine translation from English («tu puoi visitare», «fai memorie»). No author, no date, and it sells trips. Drop it.",
+    say: "«Questa fonte non è affidabile perché non ha un autore e sembra tradotta automaticamente.»" }
+];
+const TRUSTQ = [
+  "Who is behind it? Open a new tab and search their name.",
+  "When? Is it still current?",
+  "Why does it exist? To inform, sell, or persuade?",
+  "Where is the evidence? Data, names, quotes?",
+  "Is it real Italian, written for Italians?"
+];
+
+const QTYPES = {
+  pref: "esprimere una preferenza", opin: "esprimere o giustificare un'opinione", cons: "dare consigli",
+  info: "spiegare o fornire informazioni", emoz: "esprimere emozioni", prev: "fare previsioni",
+  conf: "confrontare con la propria comunità", rifl: "riflettere su prospettive e prodotti o pratiche"
+};
+const QTYPE_EN = { pref: "preference", opin: "opinion", cons: "advice", info: "information", emoz: "emotion", prev: "prediction", conf: "comparison", rifl: "reflection" };
+const PPR_BOXES = [
+  ["title", "Title"], ["intro", "Introduction"], ["m1", "Main idea 1"], ["m2", "Main idea 2"],
+  ["m3", "Main idea 3"], ["m4", "Main idea 4"], ["concl", "Conclusion"]
+];
+const PPR_LIMIT = PACK.pprBoxWords;
+
+const RUBRIC_SRC = `Rubric wording on this page is shortened for practice. It is based on the scoring guidelines in College Board's <a target="_blank" rel="noopener" href="https://apcentral.collegeboard.org/media/pdf/ap-italian-language-and-culture-course-and-exam-description.pdf">AP Italian Language and Culture Course and Exam Description</a> and on a teacher-workshop summary. The official scoring guidelines are the ones in that document.`;
+
+/* ============================ helpers ============================ */
+const MADE_BY = "Assunta Scotto", APP_VERSION = "2.0 (2026-11-10)";
+const $ = (s, r) => (r || document).querySelector(s);
+const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const app = $("#app");
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); const t = a[i]; a[i] = a[j]; a[j] = t; } return a; };
+const hasReal = () => !!(PACK.real && PACK.real.prompt && Array.isArray(PACK.real.factors) && PACK.real.factors.length);
+
+/* Saved work: one record per year pack. Inside it, the skills pages are shared,
+   and the practice prompt and the real project each keep their own work. */
+const KEY = "ricercaAP.v2." + PACK.id;
+const blankProj = () => ({ f: {}, nCards: 1, cur: 0, nGoals: 3, pick: [], used: [], lastQA: [] });
+const blankRoot = () => ({ app: "Ricerca AP", author: MADE_BY, v: 2, pack: PACK.id, mode: "practice", shared: {}, proj: { practice: blankProj(), real: blankProj() } });
+function fromV1(s) {
+  const r = blankRoot(), p = r.proj.practice, pick = Array.isArray(s.pick) ? s.pick : [];
+  Object.keys(s.f).forEach(k => {
+    const m = k.match(/^p\.(rel|info)(\d)$/);
+    if (/^(trep|dove)\./.test(k)) r.shared[k] = s.f[k];
+    else if (m) { if (pick[+m[2]] != null) p.f["p." + m[1] + ".f" + pick[+m[2]]] = s.f[k]; }
+    else p.f[k] = s.f[k];
+  });
+  p.nCards = s.nCards || 1; p.cur = s.cur || 0; p.nGoals = s.nGoals || 3; p.pick = pick;
+  p.used = Array.isArray(s.used) ? s.used : []; p.lastQA = Array.isArray(s.lastQA) ? s.lastQA : [];
+  return r;
+}
+function normalize(s) {
+  if (!s || typeof s !== "object") return null;
+  if (s.v === 1 && s.f && typeof s.f === "object") return PACK.id === "2027-musica" ? fromV1(s) : null;
+  if (s.v !== 2 || s.pack !== PACK.id) return null;
+  const r = blankRoot();
+  r.mode = s.mode === "real" ? "real" : "practice"; r.at = s.at;
+  if (s.shared && typeof s.shared === "object") r.shared = s.shared;
+  ["practice", "real"].forEach(m => {
+    const p = s.proj && s.proj[m]; if (!p || typeof p !== "object") return;
+    const q = r.proj[m] = Object.assign(blankProj(), p);
+    if (!q.f || typeof q.f !== "object") q.f = {};
+    ["pick", "used", "lastQA"].forEach(k => { if (!Array.isArray(q[k])) q[k] = []; });
+    q.nCards = Math.max(1, +q.nCards || 1); q.cur = Math.max(0, +q.cur || 0); q.nGoals = Math.min(5, Math.max(3, +q.nGoals || 3));
+  });
+  return r;
+}
+let root = blankRoot(), storageOK = true, locked = false, dirty = false;
+try { localStorage.setItem(KEY + ".test", "1"); localStorage.removeItem(KEY + ".test"); } catch (e) { storageOK = false; }
+try {
+  const raw = localStorage.getItem(KEY) || (PACK.id === "2027-musica" ? localStorage.getItem("ricercaAP.v1") : null);
+  if (raw) root = normalize(JSON.parse(raw)) || blankRoot();
+} catch (e) { }
+if (root.mode === "real" && !hasReal()) root.mode = "practice";
+
+const P = () => root.proj[root.mode];                                   /* the work for the prompt in use */
+const PR = () => root.mode === "real" && hasReal() ? PACK.real : PACK.practice; /* the prompt in use */
+const isPractice = () => PR() === PACK.practice;
+const factor = id => PR().factors.find(f => f.id === id);
+const picks = () => P().pick.filter(id => factor(id));
+const QB = () => PR().qbank || PACK.practice.qbank;
+const bag = k => /^(trep|dove|me)\./.test(k) ? root.shared : P().f;
+const F = k => { const v = bag(k)[k]; return v == null ? "" : v; };
+
+let saveT = null;
+function setStatus(s) {
+  const el = $("#savest"); if (!el) return;
+  el.className = "status" + (s === "ok" ? " ok" : s === "bad" ? " bad" : "");
+  el.textContent = s === "ok" ? "Saved ✓" : s === "bad" ? "NOT saved" : "Saving…";
+}
+function alertBar() {
+  const el = $("#alert"); if (!el) return;
+  el.innerHTML = storageOK ? "" : `<div class="alert" role="alert"><span><b>This browser is not saving your work.</b> Download a backup before you close this tab.</span><button data-act="backup">Download my work</button></div>`;
+}
+function save() { if (locked) return; dirty = true; clearTimeout(saveT); setStatus("saving"); saveT = setTimeout(saveNow, 250); }
+function saveNow() {
+  clearTimeout(saveT); if (locked || !dirty) return;
+  try { root.at = Date.now(); localStorage.setItem(KEY, JSON.stringify(root)); storageOK = true; dirty = false; setStatus("ok"); }
+  catch (e) { storageOK = false; setStatus("bad"); }
+  alertBar();
+}
+function commit() { dirty = true; saveNow(); }
+window.addEventListener("pagehide", saveNow);
+/* Two tabs: the tab that did NOT just save stops saving, so it cannot overwrite newer work. */
+window.addEventListener("storage", e => {
+  if (e.key !== KEY || locked) return;
+  locked = true; clearTimeout(saveT); stopAll();
+  const d = document.createElement("div"); d.className = "lock"; d.setAttribute("role", "alertdialog"); d.setAttribute("aria-label", "Open in another tab");
+  d.innerHTML = `<div class="panel"><h2>Ricerca AP is open in another tab</h2><p>That tab just saved your newest work. This tab has stopped saving, so nothing gets overwritten.</p><p>Keep working in the other tab, or reload this one to see the newest work here.</p><div class="row"><button class="primary" id="lockreload">Reload this tab</button></div></div>`;
+  document.body.appendChild(d);
+  const b = $("#lockreload"); b.addEventListener("click", () => location.reload()); b.focus();
+});
+const ui = { cards: shuffle(CARDS.map((_, i) => i)), yns: shuffle(YESNO.map((_, i) => i)), card: 0, cardDone: null, score: 0, yn: 0, ynDone: null, tab: "read", fake: 0, verdict: null, shown: {}, fold: {} };
+
+function ta(k, label, opt) {
+  opt = opt || {};
+  return `<label class="f">${label}${opt.it ? `<span class="itl" lang="it">${esc(opt.it)}</span>` : ""}${opt.hint ? `<span class="h">${opt.hint}</span>` : ""}<textarea data-k="${k}" id="f-${k}" lang="it" class="${opt.cls || ""}"></textarea></label>`;
+}
+function tx(k, label, opt) {
+  opt = opt || {};
+  return `<label class="f">${label}${opt.it ? `<span class="itl" lang="it">${esc(opt.it)}</span>` : ""}<input type="text" data-k="${k}" id="f-${k}" lang="it" autocomplete="off"></label>`;
+}
+function head(eyebrow, h1, lead) { return `<div class="head"><div class="row between"><div class="row"><div class="eyebrow">${eyebrow}</div>${hasReal() ? `<span class="pill">${isPractice() ? "Practice prompt" : "Real project"}</span>` : ""}</div><div class="langrule">Directions in English · your work in Italian</div></div><h1>${h1}</h1>${lead ? `<p class="lead">${lead}</p>` : ""}</div>`; }
+function foot(id, note) {
+  const i = ROUTES.findIndex(r => r.id === id), p = ROUTES[i - 1], n = ROUTES[i + 1];
+  return `<div class="navfoot noprint"><div class="row">${p ? `<a class="btn" href="#${p.id}">Back</a>` : ""}<button data-act="print">Print this page</button></div><span class="muted small">${note || ""}</span>${n ? `<a class="btn primary" href="#${n.id}">Next: ${esc(n.title)}</a>` : ""}</div>`;
+}
+function fill() {
+  $$("[data-k]", app).forEach(el => {
+    const v = bag(el.dataset.k)[el.dataset.k];
+    if (el.type === "radio") el.checked = v === el.value;
+    else if (el.type === "checkbox") el.checked = !!v;
+    else el.value = v == null ? "" : v;
+  });
+}
+function critTable(list, prefix) {
+  let last = null, out = "";
+  list.forEach((c, i) => {
+    if (c[0] && c[0] !== last) { out += `<h3 lang="it" style="margin-top:8px">${esc(c[0])}</h3>`; last = c[0]; }
+    out += `<div class="crit"><div lang="it">${esc(c[1])}</div><div class="marks" role="radiogroup" aria-label="Present?">` +
+      [["si", "Sì"], ["no", "No"], ["parte", "In un certo senso"]].map(m => `<label lang="it"><input type="radio" name="${prefix}${i}" data-k="${prefix}.${i}" value="${m[0]}">${m[1]}</label>`).join("") +
+      `</div><label class="f">Example and suggestion<textarea class="short" data-k="${prefix}x.${i}" id="f-${prefix}x-${i}" lang="it"></textarea></label></div>`;
+  });
+  return out;
+}
+function scoreRow(rubric, prefix) {
+  return `<div class="scores">` + rubric.map(r => `<label class="f">${r.name}<select data-k="${prefix}.${r.key}" id="f-${prefix}-${r.key}"><option value="">– / ${r.max}</option>${Array.from({ length: r.max + 1 }, (_, n) => `<option value="${n}">${n} / ${r.max}</option>`).join("")}</select></label>`).join("") + `</div>`;
+}
+function total(rubric, prefix) {
+  let t = 0, any = false; rubric.forEach(r => { const v = F(prefix + "." + r.key); if (v !== "") { any = true; t += +v; } });
+  return any ? t : "–";
+}
+function modeSwitch() {
+  if (!hasReal()) return "";
+  return `<div class="row noprint"><b>I am working on:</b><div class="seg" role="group" aria-label="Which prompt">${[["practice", "Practice prompt"], ["real", "Real project"]].map(m => `<button data-act="mode" data-a="${m[0]}" class="${root.mode === m[0] ? "sel" : ""}" aria-pressed="${root.mode === m[0]}">${m[1]}</button>`).join("")}</div><span class="muted small">Each one keeps its own plan, source cards, PPR and recordings.</span></div>`;
+}
+function promptBox() {
+  return `${modeSwitch()}<div class="panel soft"><h2>The project prompt${isPractice() ? " (practice)" : ""}</h2>
+  ${isPractice() ? `<div class="note">This is a made-up practice prompt. ${hasReal() ? "Switch to the real project when your teacher tells you to." : `College Board releases the real prompt and its six factors in ${PACK.dates.packet}.`}</div>` : ""}
+  <p lang="it">${esc(PR().prompt.it)}</p>${PR().prompt.en ? `<p class="muted small">${esc(PR().prompt.en)}</p>` : ""}</div>`;
+}
+
+/* ============================ audio ============================ */
+let run = null, micStream = null, urls = [];
+function stopAll() {
+  if (run) run.cancelled = true; run = null;
+  try { speechSynthesis.cancel(); } catch (e) { }
+  if (micStream) { micStream.getTracks().forEach(t => t.stop()); micStream = null; }
+  wakeOff();
+}
+/* Keep the screen on while a timed task or an audio source is running. */
+let wake = null;
+async function wakeOn() {
+  try { if ("wakeLock" in navigator && !wake) { const w = await navigator.wakeLock.request("screen"); wake = w; w.addEventListener("release", () => { if (wake === w) wake = null; }); if (!run) wakeOff(); } } catch (e) { }
+}
+function wakeOff() { try { if (wake) wake.release(); } catch (e) { } wake = null; document.body.classList.remove("busy"); }
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible" && run) wakeOn(); });
+/* Phones only let a page speak after a tap: say nothing, once, inside the tap. */
+function primeVoice() { try { const u = new SpeechSynthesisUtterance(" "); u.volume = 0; speechSynthesis.speak(u); } catch (e) { } }
+const sentences = p => p.replace(/([.!?…]+[»”"]?)\s+/g, "$1\u0001").split("\u0001").map(x => x.trim()).filter(Boolean);
+async function getMic() {
+  if (micStream) return micStream;
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.MediaRecorder) throw new Error("unsupported");
+  micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  return micStream;
+}
+function beep() {
+  try {
+    const C = window.AudioContext || window.webkitAudioContext, c = new C(), o = c.createOscillator(), g = c.createGain();
+    o.frequency.value = 880; g.gain.value = 0.15; o.connect(g); g.connect(c.destination); o.start(); o.stop(c.currentTime + 0.3);
+    setTimeout(() => c.close(), 600);
+  } catch (e) { }
+}
+const wait = (ms, r) => new Promise(res => { const t0 = Date.now(); const iv = setInterval(() => { if ((r && (r.cancelled || r.skip)) || Date.now() - t0 >= ms) { clearInterval(iv); if (r) r.skip = false; res(); } }, 100); });
+function countdown(sec, r, tick) {
+  return new Promise(res => {
+    const end = Date.now() + sec * 1000; tick(sec);
+    const iv = setInterval(() => {
+      const left = Math.max(0, Math.ceil((end - Date.now()) / 1000)); tick(left);
+      if (r.cancelled || r.skip || left <= 0) { clearInterval(iv); r.skip = false; res(); }
+    }, 200);
+  });
+}
+const mmss = s => Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
+async function recordFor(sec, r, tick) {
+  let mr = null, chunks = [];
+  try { const st = await getMic(); mr = new MediaRecorder(st); mr.ondataavailable = e => { if (e.data && e.data.size) chunks.push(e.data); }; mr.start(); } catch (e) { mr = null; }
+  await countdown(sec, r, tick);
+  if (mr && mr.state !== "inactive") { await new Promise(res => { mr.onstop = res; mr.stop(); }); return new Blob(chunks, { type: mr.mimeType || "audio/webm" }); }
+  return null;
+}
+function itVoice() {
+  try { const vs = speechSynthesis.getVoices(); return vs.find(v => /^it/i.test(v.lang) && /google/i.test(v.name)) || vs.find(v => /^it/i.test(v.lang)) || null; } catch (e) { return null; }
+}
+function voiceState() {
+  if (!("speechSynthesis" in window)) return "none";
+  const vs = speechSynthesis.getVoices(); if (!vs.length) return "unknown";
+  return itVoice() ? "ok" : "none";
+}
+try { speechSynthesis.onvoiceschanged = () => { const el = $("#voicemsg"); if (el) el.innerHTML = voiceMsg(); }; } catch (e) { }
+function voiceMsg() {
+  const v = voiceState();
+  return v === "none" ? `<div class="note">This device has no Italian voice. The questions will appear as text for a few seconds instead. Tell your teacher.</div>` : "";
+}
+function speak(text, r) {
+  return new Promise(res => {
+    if (voiceState() === "none") return res(false);
+    const u = new SpeechSynthesisUtterance(text), v = itVoice(); u.lang = "it-IT"; if (v) u.voice = v; u.rate = 0.92;
+    let done = false; const fin = () => { if (!done) { done = true; clearTimeout(t); clearInterval(iv); res(true); } };
+    u.onend = fin; u.onerror = fin;
+    const t = setTimeout(fin, 5000 + text.length * 120);
+    const iv = setInterval(() => { if (r && r.cancelled) { try { speechSynthesis.cancel(); } catch (e) { } fin(); } }, 150);
+    try { if (speechSynthesis.speaking || speechSynthesis.pending) speechSynthesis.cancel(); speechSynthesis.resume(); speechSynthesis.speak(u); } catch (e) { fin(); }
+  });
+}
+
+/* ============================ recordings (IndexedDB) ============================ */
+let dbP = null;
+function db() {
+  if (!dbP) dbP = new Promise((res, rej) => {
+    const q = indexedDB.open("ricercaAP", 1);
+    q.onupgradeneeded = () => q.result.createObjectStore("recs", { keyPath: "id", autoIncrement: true });
+    q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error);
+  });
+  return dbP;
+}
+async function recPut(o) { const d = await db(); return new Promise((res, rej) => { const t = d.transaction("recs", "readwrite"); const q = t.objectStore("recs").add(o); q.onsuccess = () => res(q.result); t.onerror = () => rej(t.error); }); }
+async function recAll() { try { const d = await db(); return await new Promise((res, rej) => { const q = d.transaction("recs").objectStore("recs").getAll(); q.onsuccess = () => res(q.result || []); q.onerror = () => rej(q.error); }); } catch (e) { return []; } }
+async function recDel(id) { const d = await db(); return new Promise(res => { const t = d.transaction("recs", "readwrite"); t.objectStore("recs").delete(id); t.oncomplete = res; t.onerror = res; }); }
+async function recClear() { try { const d = await db(); return await new Promise(res => { const t = d.transaction("recs", "readwrite"); t.objectStore("recs").clear(); t.oncomplete = res; t.onerror = res; }); } catch (e) { } }
+const mine = r => (r.pack || PACK.id) === PACK.id && (r.mode || "practice") === root.mode;
+function recsHTML(list) {
+  return list.map(r => {
+    const u = URL.createObjectURL(r.blob); urls.push(u);
+    const ext = /ogg/.test(r.blob.type) ? "ogg" : /mp4/.test(r.blob.type) ? "m4a" : "webm";
+    const name = (r.kind === "pres" ? "presentazione" : "domanda") + "-" + new Date(r.at).toISOString().slice(0, 16).replace(/[:T]/g, "-") + "." + ext;
+    return `<div class="rec"><div class="t"><b>${esc(r.label)}</b>${hasReal() ? ` <span class="pill">${r.mode === "real" ? "real project" : "practice"}</span>` : ""}<br><span class="muted">${new Date(r.at).toLocaleString()}</span></div><audio controls preload="none" src="${u}"></audio><a class="btn quiet noprint" href="${u}" download="${name}">Download</a><button class="quiet danger noprint" data-act="recdel" data-id="${r.id}">Delete</button></div>`;
+  }).join("");
+}
+async function renderRecs(sel, filter, empty, all) {
+  if (!$(sel)) return;
+  const list = (all || await recAll()).filter(filter).sort((a, b) => b.at - a.at);
+  const box = $(sel); if (!box) return;
+  box.innerHTML = list.length ? recsHTML(list) : `<p class="muted small">${empty}</p>`;
+}
+/* Q&A answers pile up fast: keep the newest sets for this prompt, delete the older ones. */
+async function pruneQA(keep) {
+  try {
+    const all = (await recAll()).filter(r => r.kind === "qa" && mine(r));
+    const old = Array.from(new Set(all.map(r => r.set || 0))).sort((a, b) => b - a).slice(keep);
+    for (const r of all) if (old.includes(r.set || 0)) await recDel(r.id);
+  } catch (e) { }
+}
+
+/* ============================ views ============================ */
+const views = {}, after = {};
+
+views.start = () => `
+${head("Start", "What does the exam ask of me?", "Five parts. The two blue boxes are your project: 35% of your score. The speaking comes first on exam day.")}
+${modeSwitch()}
+<div class="exam">
+  <div class="proj" style="flex:20"><b>Project Presentation</b><br>20% · 3 min to prepare, 3 min to speak</div>
+  <div class="proj" style="flex:15"><b>Project Q&amp;A</b><br>15% · 4 questions, 40 s each</div>
+  <div style="flex:15"><b>Essay</b><br>15% · 55 min</div>
+  <div style="flex:25"><b>Listening</b><br>25% · 25 questions</div>
+  <div style="flex:25"><b>Reading</b><br>25% · 30 questions</div>
+</div>
+<div class="grid2">
+  <a class="panel" href="#trep" style="text-decoration:none;color:inherit"><h2>Skills · start now</h2><p>The three P's · Where to look · Can I trust it? · Source card and citing</p></a>
+  <a class="panel" href="#piano" style="text-decoration:none;color:inherit"><h2>My project · ${isPractice() ? (hasReal() ? "practice prompt" : "practice now, real prompt in " + PACK.dates.packet) : "real project"}</h2><p>Research plan · PPR and rehearsal · Q&amp;A simulator</p></a>
+</div>
+<div class="grid2">
+  <div class="panel"><h2>Presentation · 11 points</h2><p class="muted small">Open a row to see what each score sounds like.</p>${rubricRows(RUBRIC_PRES)}</div>
+  <div class="panel"><h2>Q&amp;A · 9 points</h2><p class="muted small">Only one of your four answers needs the comparison or reflection.</p>${rubricRows(RUBRIC_QA)}</div>
+</div>
+<p class="muted small">${RUBRIC_SRC}</p>
+<div class="grid2">
+  <div class="panel soft"><h2>Three things the scorers say</h2>
+    <p><b>A row scores 0</b> if the answer is not in Italian, is too short to say anything, or was largely created with a translator or generative AI.</p>
+    <p><b>Finishing early is fine</b> if you have done what the row asks.</p>
+    <p><b>Correcting yourself out loud</b> does not cost points.</p></div>
+  <div class="panel soft"><h2>Dates</h2>
+    <p><b>${PACK.dates.packet}</b> · College Board releases the prompt and the sources.</p>
+    <p><b>${PACK.dates.pprDue}, ${PACK.dates.pprDueTime}</b> · You type your PPR into the AP Digital Portfolio.</p>
+    <p><b>${PACK.dates.exam}</b> · Exam day. You have access to your PPR while you present.</p></div>
+</div>
+<div class="panel"><h2>My name</h2>${tx("me.name", "First and last name. It prints at the top of everything you print.")}</div>
+${foot("start", "Rows marked “research” depend on what you find.")}`;
+function rubricRows(rb) {
+  return rb.map(r => `<details><summary>${r.name} · ${r.max} — ${r.tag}${r.research ? ` <span class="pill">research</span>` : ""}</summary><div><div class="lvl">${r.lv.map((t, n) => `<b>${n} point${n === 1 ? "" : "s"}</b><span>${t}</span>`).join("")}</div>${r.ex ? `<div class="itbox"><b>1 point sounds like:</b> <span lang="it">${r.ex.one}</span></div><div class="itbox"><b>2 points sounds like:</b> <span lang="it">${r.ex.two}</span></div><p class="muted small">The example is about coffee on purpose. You choose your ${PACK.themeEn} topic.</p>` : ""}</div></details>`).join("");
+}
+
+views.trep = () => {
+  const c = CARDS[ui.cards[ui.card]], y = YESNO[ui.yns[ui.yn]];
+  return `
+${head("Skills 1 of 4", "Products, practices, perspectives", "Linking a product or practice to a perspective is worth 2 points in both speaking tasks.")}
+<div class="grid3">
+  <div class="panel"><h2>Product · il prodotto</h2><p>What a culture makes. It can be an object or something you cannot touch, such as a law or a TV programme.</p><div class="itbox" lang="it">l'espresso al banco</div></div>
+  <div class="panel"><h2>Practice · la pratica</h2><p>What people do: habits, rituals, ways of behaving.</p><div class="itbox" lang="it">berlo in piedi, in due minuti, più volte al giorno</div></div>
+  <div class="panel key"><h2>Perspective · la prospettiva</h2><p>Why: values, beliefs, attitudes. You cannot see it; you work it out.</p><div class="itbox" lang="it">la pausa breve come momento di socialità quotidiana</div></div>
+</div>
+<p class="muted small">The examples on this page are not about ${PACK.themeEn} on purpose: you choose your ${PACK.themeEn} topic, the app never does.</p>
+<div class="grid2">
+  <div class="panel"><div class="row between"><h2>Exercise A · Which P is it?</h2><span class="muted small">Card ${ui.card + 1} of ${CARDS.length} · ${ui.score} right</span></div>
+    <div class="itbox" lang="it" style="font-size:1.15rem">${esc(c.t)}</div>
+    <div class="row">${["prodotto", "pratica", "prospettiva"].map(a => `<button data-act="card" data-fg="A" ${!ui.cardDone && a === "prodotto" ? 'data-focus="A"' : ""} data-a="${a}" style="flex:1 1 150px" ${ui.cardDone ? "disabled" : ""} class="${ui.cardDone && c.a === a ? "sel" : ""}">${PLABEL[a].split(" · ")[0]}</button>`).join("")}</div>
+    ${ui.cardDone ? `<div class="fb ${ui.cardDone === c.a ? "ok" : "no"}"><b>${ui.cardDone === c.a ? "Right." : "Not quite: it is a " + PLABEL[c.a].split(" · ")[0].toLowerCase() + "."}</b> ${c.why}</div><div class="row"><button class="primary" data-act="cardnext" data-fg="A" data-focus="A">${ui.card + 1 < CARDS.length ? "Next card" : "Start again"}</button></div>` : ""}
+  </div>
+  <div class="panel"><div class="row between"><h2>Exercise B · Is this a perspective?</h2><span class="muted small">${ui.yn + 1} of ${YESNO.length}</span></div>
+    <div class="itbox" lang="it" style="font-size:1.15rem">«${esc(y.t)}»</div>
+    <div class="row"><button data-act="yn" data-fg="B" ${ui.ynDone == null ? 'data-focus="B"' : ""} data-a="1" style="flex:1" ${ui.ynDone != null ? "disabled" : ""}>Yes, a perspective</button><button data-act="yn" data-fg="B" data-a="0" style="flex:1" ${ui.ynDone != null ? "disabled" : ""}>No</button></div>
+    ${ui.ynDone != null ? `<div class="fb ${ui.ynDone === y.persp ? "ok" : "no"}"><b>${ui.ynDone === y.persp ? "Right." : "Not quite."}</b> ${y.why}</div><div class="row"><button class="primary" data-act="ynnext" data-fg="B" data-focus="B">${ui.yn + 1 < YESNO.length ? "Next one" : "Start again"}</button></div>` : ""}
+    <p class="muted small">Two common mistakes: calling an action a perspective, and calling a written text a perspective. An action is a practice. A text is a product. The perspective is the why.</p>
+  </div>
+</div>
+<div class="panel"><h2>Your turn</h2>
+  <p>Think of something people do in <b>your own</b> community. Describe the practice, then finish the bridge sentence. Say it out loud too.</p>
+  <div class="grid2">${ta("trep.pratica", "A practice in my community", { hint: "One or two sentences in Italian." })}${ta("trep.ponte", "The bridge to the perspective", { it: "«Questa pratica mostra che la comunità dà valore a…»" })}</div>
+</div>
+${foot("trep", "")}`;
+};
+
+function doveQueries() {
+  const kw = F("dove.kw").trim(), q = w => `"${kw || "le tue parole chiave"}" ${w} site:.it`.replace(/\s+/g, " ");
+  const g = w => "https://www.google.com/search?q=" + encodeURIComponent(q(w));
+  const variants = [["", "everything"], ["intervista", "interviews"], ["podcast", "audio"], ["dati", "numbers"], ["storia", "background"]];
+  const go = (href, label) => kw ? `<a class="btn quiet noprint" target="_blank" rel="noopener" href="${href}">${label}</a>` : `<button class="quiet noprint" disabled>${label}</button>`;
+  return (kw ? "" : `<p class="muted small">Type your key words first. Then the search buttons switch on.</p>`) +
+    variants.map(v => `<div class="qrow"><div class="query" lang="it">${esc(q(v[0]))}</div>${go(g(v[0]), "Search " + v[1])}</div>`).join("") +
+    `<div class="row">${go("https://www.youtube.com/results?search_query=" + encodeURIComponent(kw), "Search YouTube with my words")}</div>`;
+}
+views.dove = () => `
+${head("Skills 2 of 4", "Where do I find sources in Italian?", "Places to search, not ready-made answers. Each one is labeled so you know whether it opens on a school Chromebook.")}
+<div class="tabs noprint" role="tablist">${[["read", "Read"], ["listen", "Listen and watch"], ["data", "Data and charts"]].map(t => `<button role="tab" aria-selected="${ui.tab === t[0]}" data-act="tab" data-a="${t[0]}" class="${ui.tab === t[0] ? "sel" : ""}">${t[1]}</button>`).join("")}</div>
+<div class="grid2">
+  <div class="panel"><div>${PACK.themeSites.filter(s => s.cat === ui.tab).concat(SITES[ui.tab]).map(s => { const l = PACK.siteLabels[s.k] || "untested"; return `<div class="site"><div><a href="${s.url}" target="_blank" rel="noopener"><b>${esc(s.name)}</b></a><br><span class="small">${esc(s.d)}</span></div><span class="pill ${l}">${SITE_LABEL[l]}</span></div>`; }).join("")}</div>
+    <p class="muted small">Blocked at school? Tell your teacher which site, and use it from home.</p></div>
+  <div class="stack">
+    <div class="panel"><h2>Build your search in Italian</h2>
+      ${tx("dove.kw", "My key words (in Italian)")}
+      <div id="queries" class="stack" style="gap:8px">${doveQueries()}</div>
+      <p class="muted small"><b>site:.it</b> keeps the results to Italian websites. The quotation marks keep your words together.</p></div>
+    <div class="panel soft"><h2>How to listen to a source</h2><p><b>1</b> First time: just the main idea.</p><p><b>2</b> Second time: pause and note names and numbers.</p><p><b>3</b> Slow the speed, or turn on Italian subtitles or the transcript if there is one.</p></div>
+    <div class="panel soft"><h2>AI and translators</h2><p>Follow College Board's AI Guidance for this course and your teacher's rules.</p><p><b>A dictionary: yes.</b> Look up words and expressions.</p><p><b>A translator for a whole page or a whole source: no.</b> Read and listen in Italian, and write your own work in Italian.</p></div>
+  </div>
+</div>
+${foot("dove", "")}`;
+
+views.fidarsi = () => {
+  const p = FAKES[ui.fake], v = ui.verdict, names = { use: "Use it", care: "Use with care", drop: "Drop it" };
+  return `
+${head("Skills 3 of 4", "Can I trust this source?", "Five questions for every source. The first one sends you off the page: what others say about a site tells you more than the site says about itself.")}
+<div class="grid2">
+  <div class="stack"><div class="row between"><h2>Practice source ${ui.fake + 1} of ${FAKES.length}</h2><span class="pill">invented for this exercise</span></div>
+    <div class="fake" lang="it"><div class="url">${esc(p.url)}</div><div class="pg"><div class="site-name">${esc(p.site)}</div><h3>${esc(p.title)}</h3><div class="by">${esc(p.by)}</div>${p.body.map(b => `<p>${esc(b)}</p>`).join("")}</div></div>
+    <div class="row noprint"><button data-act="fake" data-a="-1" ${ui.fake === 0 ? "disabled" : ""}>Previous source</button><button data-act="fake" data-a="1" ${ui.fake === FAKES.length - 1 ? "disabled" : ""}>Next source</button></div>
+  </div>
+  <div class="panel"><h2>The five questions</h2>
+    <div>${TRUSTQ.map((q, i) => `<label class="chk"><input type="checkbox" id="tq${ui.fake}-${i}">${q}</label>`).join("")}</div>
+    <h3>Your verdict</h3>
+    <div class="row">${Object.keys(names).map(k => `<button data-act="verdict" data-fg="V" data-a="${k}" style="flex:1 1 120px" class="${v === k ? "sel" : ""}" ${v ? "disabled" : ""}>${names[k]}</button>`).join("")}</div>
+    ${v ? `<div tabindex="-1" data-focus="V" class="fb ${p.ok[0] === v ? "ok" : p.ok.includes(v) ? "mid" : "no"}"><b>${p.ok[0] === v ? "Good call." : p.ok.includes(v) ? "Reasonable." : "Look again."}</b> ${p.why}</div><div class="itbox"><b>Say it in Italian:</b> <span lang="it">${p.say}</span></div>` : `<p class="muted small">Tick the questions as you check them, then choose.</p>`}
+  </div>
+</div>
+<div class="panel soft"><p><b>Stereotypes are a warning sign too.</b> A source that says «tutti gli italiani…» or «nessuno…» is generalizing. On the exam, generalizations lose the culture points; researched examples earn them.</p></div>
+${foot("fidarsi", "")}`;
+};
+
+views.scheda = () => {
+  const i = Math.min(P().cur, P().nCards - 1), k = n => `c${i}.${n}`, fx = P().f[k("fx")] || [];
+  return `
+${head("Skills 4 of 4", "One card for every source", "The same boxes as College Board's organizer (Scheda per l'analisi delle fonti). Use it for packet sources and for the ones you find yourself.")}
+<div class="row between noprint"><div class="row">${Array.from({ length: P().nCards }, (_, n) => `<button data-act="cardsel" data-a="${n}" class="${n === i ? "sel" : ""}">Card ${n + 1}</button>`).join("")}<button data-act="cardadd">+ New card</button><button data-act="printcards">Print all my cards</button></div>${P().nCards > 1 ? `<button class="quiet danger" data-act="carddel">${ui.confirmCard ? "Press again to delete this card" : "Delete this card"}</button>` : ""}</div>
+<div class="grid2">
+  <div class="panel"><h2>About the source · card ${i + 1}</h2>
+    <label class="f">Kind of source<span class="itl" lang="it">Tipo di fonte</span><select data-k="${k("tipo")}" id="f-${k("tipo")}" lang="it"><option value=""></option><option>articolo</option><option>video</option><option>audio o podcast</option><option>grafico o tabella</option><option>intervista</option><option>altro</option></select></label>
+    ${tx(k("titolo"), "Title", { it: "Titolo della fonte" })}
+    ${tx(k("autore"), "Author or creator", { it: "Autore/Creatore" })}
+    ${tx(k("data"), "Date published, if given", { it: "Data di pubblicazione" })}
+    ${tx(k("link"), "Where I found it (site or link)")}
+    ${ta(k("riassunto"), "Key points", { it: "Riassunto dei punti chiave", hint: "Two or three sentences, or a short list." })}
+    ${ta(k("parole"), "Key words and expressions", { it: "Parole/Espressioni chiave", cls: "short" })}
+    ${ta(k("domanda"), "If you could, what would you ask the author?", { it: "Se potessi, cosa chiederesti all'autore riguardo a questa fonte?", cls: "short" })}
+  </div>
+  <div class="panel"><h2>What the source means</h2>
+    ${ta(k("prodotti"), "Cultural products or practices in it", { it: "Prodotti e/o pratiche culturali legati alla fonte", hint: "For example clothing, instruments, food, works of art, traditions, routines, celebrations." })}
+    <div class="panel key" style="padding:12px">${ta(k("prospettive"), "Cultural perspectives in it", { it: "Prospettive culturali espresse nella fonte", hint: "Beliefs, values, views of the world." })}</div>
+    <div class="stack" style="gap:6px"><b style="font-size:.92rem">Which of the six prompt factors does it help with?</b>
+      <div class="grid3">${PR().factors.map(f => `<button class="factor ${fx.includes(f.id) ? "sel" : ""}" data-act="cardfx" data-a="${f.id}" aria-pressed="${fx.includes(f.id)}"><span lang="it">${f.id}. ${esc(f.name)}</span><small>${f.group === "persp" ? "perspective" : "product or practice"}</small></button>`).join("")}</div></div>
+    ${ta(k("fattori"), "Examples from the source for those factors", { it: "Fattori e/o esempi della traccia presenti nella fonte", cls: "short" })}
+    ${ta(k("confronto"), "How does this compare with your own community?", { it: "Confronto tra la fonte e la tua comunità", hint: "This box is practice for the Q&A, where one comparison earns the culture points." })}
+  </div>
+</div>
+<div class="panel soft"><h2>Say the source out loud</h2><p>In a talk there are no footnotes. Name the source as you speak:</p>
+  <div class="chips" lang="it"><span class="chip">Secondo…</span><span class="chip">Come spiega…</span><span class="chip">In un'intervista a…</span><span class="chip">I dati di… mostrano che…</span></div></div>
+${foot("scheda", "")}`;
+};
+
+views.piano = () => {
+  const pk = picks(), okP = pk.some(id => factor(id).group === "persp"), persp = PR().factors.filter(f => f.group === "persp").map(f => f.id).join(" or ");
+  const msg = ui.pickMsg || (pk.length < 3 ? `Choose ${3 - pk.length} more.` : okP ? "Three chosen, with at least one perspective." : `You need at least one perspective (${persp}). Change one of your choices.`);
+  return `
+${head("My project 1 of 3", "My research plan", "The same four parts as College Board's plan (Modello di piano d'azione per la ricerca). The plan can change as your research grows.")}
+${promptBox()}
+<div class="panel"><h2>Part 1 · My topic and my community</h2><p class="muted small">You may list more than one idea and change it later.</p>
+  <div class="grid2">${ta("p.topic", "Presentation topic", { it: "Argomento della Project Presentation", cls: "short" })}${ta("p.community", "Community or region I chose", { it: "Comunità o regione di riferimento", cls: "short" })}</div></div>
+<div class="panel"><h2>Part 2 · Choose three of the six factors</h2>
+  <div class="grid3">${PR().factors.map(f => `<button class="factor ${pk.includes(f.id) ? "sel" : ""}" data-act="pick" data-a="${f.id}" aria-pressed="${pk.includes(f.id)}"><span lang="it"><b>${f.id}. ${esc(f.name)}</b></span><small lang="it">${esc(f.ex)}</small><small>${f.group === "persp" ? "perspective" : "product or practice"}</small></button>`).join("")}</div>
+  <div role="status" class="fb ${ui.pickMsg ? "no" : pk.length === 3 && okP ? "ok" : "mid"}">${msg} The Q&amp;A can ask about all six, including the ones you did not choose.</div>
+  ${pk.map(id => { const f = factor(id); return `<div class="stack" style="gap:8px"><h3 lang="it">Fattore ${f.id}. ${esc(f.name)}</h3><div class="grid2">${ta("p.rel.f" + id, "Why it fits the prompt and my topic", { it: "Pertinenza rispetto alla traccia e al tema del progetto" })}${ta("p.info.f" + id, "What I need to find out", { it: "Informazioni da approfondire" })}</div></div>`; }).join("")}
+  ${pk.length < 3 ? `<p class="muted small">Each factor you choose opens its two boxes here. What you write stays with that factor, even if you take it off and choose it again.</p>` : ""}
+</div>
+<div class="panel"><h2>Part 3 · How I will collect information</h2>
+  <div class="grid2">${ta("p.terms", "Search terms", { it: "Termini di ricerca per trovare fonti appropriate e affidabili" })}${ta("p.res", "Where I will look", { it: "Risorse specifiche da cercare (database, biblioteche, riviste, giornali, podcast)" })}${ta("p.people", "People or organizations to contact", { it: "Persone o enti da contattare nella comunità o nella regione di riferimento" })}${ta("p.org", "How I will keep and organize my notes", { it: "Come e dove raccogliere e organizzare queste informazioni" })}</div></div>
+<div class="panel"><h2>Part 4 · Three to five SMART goals</h2>
+  <p class="muted small">Specific, measurable, achievable, relevant, with a deadline.</p>
+  <div class="itbox"><b>College Board's example:</b> <span lang="it">individuerò tre fonti affidabili (due articoli e un podcast) che riguardano il fattore 1 e prenderò appunti su ciascuna fonte usando la Scheda per l'analisi delle fonti. — Entro la fine della prossima lezione.</span></div>
+  ${Array.from({ length: P().nGoals }, (_, n) => `<div class="goalrow">${ta("g" + n + ".goal", "Goal " + (n + 1), { it: "Obiettivo SMART", cls: "short" })}${ta("g" + n + ".when", "By when", { it: "Tempistiche/scadenze", cls: "short" })}</div>`).join("")}
+  <div class="row noprint">${P().nGoals < 5 ? `<button data-act="goaladd">+ Add a goal</button>` : ""}${P().nGoals > 3 ? `<button class="quiet" data-act="goaldel">${ui.confirmGoal ? "Press again: goal " + P().nGoals + " and its text are deleted" : "Remove the last goal"}</button>` : ""}</div></div>
+${foot("piano", "PPR due " + PACK.dates.pprDue + " · Exam " + PACK.dates.exam)}`;
+};
+
+function pprCheck(v) {
+  const n = (v.trim().match(/\S+/g) || []).length; let m = "";
+  const toks = v.toLowerCase().replace(/[.,;:!?«»"()]/g, " ").split(/\s+/);
+  const verbs = new Set(["è", "sono", "siamo", "ha", "hanno", "abbiamo", "c'è", "era", "erano", "sarà", "viene", "vengono", "fa", "fanno", "mostra", "mostrano", "rappresenta", "rappresentano", "significa", "esiste", "esistono", "parlerò", "vorrei", "voglio", "penso", "credo", "spiegherò", "presenterò"]);
+  if (n > PPR_LIMIT) m = `Over ${PPR_LIMIT} words. The real PPR will not accept this.`;
+  else if (toks.some(t => verbs.has(t)) || /[.!?]\s*$/.test(v.trim()) || /[.;]\s+\S/.test(v)) m = "This looks like a sentence. Key words only: no verbs, no full stops.";
+  return { n, m };
+}
+function pprRows() {
+  return PPR_BOXES.map(b => { const c = pprCheck(F("ppr." + b[0])); return `<div class="pprrow"><label for="f-ppr.${b[0]}"><b>${b[1]}</b></label><input type="text" data-k="ppr.${b[0]}" id="f-ppr.${b[0]}" lang="it" autocomplete="off"><span class="cnt ${c.n > PPR_LIMIT ? "over" : ""}" id="cnt-${b[0]}">${c.n}/${PPR_LIMIT}</span><span class="pprmsg" id="msg-${b[0]}">${c.m}</span></div>`; }).join("");
+}
+views.ppr = () => `
+${head("My project 2 of 3", "Key words, not a script", `Seven boxes, ${PPR_LIMIT} Italian words each. A talk that sounds read or memorized scores 0 for delivery, so the boxes hold key words and you say it fresh each time.`)}
+<div class="grid2">
+  <div class="panel"><h2>My PPR draft (in Italian)</h2>
+    ${pprRows()}
+    <div class="note">Practice copy only. You type the real PPR yourself into the AP Digital Portfolio by ${PACK.dates.pprDue}. The ${PPR_LIMIT}-word limit comes from College Board's template as shared in a teacher workshop: check the limit shown in the Portfolio. The sentence warning is a rough check, not a rule.</div>
+    <div class="row noprint"><button data-act="printppr">Print my PPR only</button><span class="muted small">On exam day you have access to your PPR. Rehearse from a copy of it, not from extra notes.</span></div>
+  </div>
+  <div class="stack">
+    <div class="panel" id="reh" data-nofold></div>
+    <div class="panel"><h2>My rehearsals</h2><div id="recs-pres"></div><p class="muted small">Recordings stay on this device until you download or delete them. Say it a little differently each time.</p></div>
+  </div>
+</div>
+<div class="panel"><div class="row between"><h2>Score myself</h2><b id="tot-ps">${total(RUBRIC_PRES, "ps")} / 11</b></div>
+  <p class="muted small">Listen to a rehearsal first. Your own score for Language and Delivery is a guess: ask your teacher or a classmate to fill in the form below too.</p>
+  ${scoreRow(RUBRIC_PRES, "ps")}</div>
+<div class="panel"><h2 lang="it">Modulo di feedback sulla Practice Presentation</h2>
+  <p class="muted small">College Board's practice form. For each line: is it in the talk? Give an example from the talk. Judge, do not rewrite.</p>
+  ${critTable(CRIT_PRES, "pf")}</div>
+${foot("ppr", "")}`;
+function rehIdle(note) {
+  return `<h2>Timed rehearsal</h2><div class="row"><div class="clockbox" style="flex:1"><div class="clock">3:00</div><span>to prepare</span></div><div class="clockbox" style="flex:1"><div class="clock">3:00</div><span>to present</span></div></div>
+  ${note || ""}<div class="row"><button class="primary" data-act="rehstart">Start: prepare, then record</button></div>
+  <p class="muted small">During the rehearsal you see only the prompt and your PPR, as on exam day.</p>`;
+}
+after.ppr = () => { $("#reh").innerHTML = rehIdle(); renderRecs("#recs-pres", r => r.kind === "pres" && mine(r), "No rehearsals recorded yet."); };
+async function rehearsal() {
+  stopAll(); const r = run = { cancelled: false, skip: false }, box = $("#reh"); wakeOn(); document.body.classList.add("busy");
+  let mic = true; try { await getMic(); } catch (e) { mic = false; }
+  if (r.cancelled || !$("#reh")) return;
+  const pprList = PPR_BOXES.map(b => `<div><b>${b[1]}:</b> <span lang="it">${esc(F("ppr." + b[0])) || "—"}</span></div>`).join("");
+  const frame = (phase, label, btn) => `<h2>Timed rehearsal</h2><div class="livebar"><div class="clockbox ${phase === "rec" ? "live" : ""}"><div class="clock" id="clk">3:00</div><span>${label}</span></div>
+    <div class="row"><button class="primary" data-act="rehskip">${btn}</button><button data-act="rehstop">Stop without saving</button></div></div>
+    ${mic ? "" : `<div class="note">No microphone: the timer runs, but nothing is recorded. Allow the microphone for this page and start again.</div>`}
+    <div class="itbox"><p lang="it">${esc(PR().prompt.it)}</p>${PR().prompt.en ? `<p class="muted small">${esc(PR().prompt.en)}</p>` : ""}</div><div class="itbox">${pprList}</div>`;
+  box.innerHTML = frame("prep", "to prepare. Nothing is being recorded yet.", "I'm ready: start presenting");
+  await countdown(180, r, s => { const c = $("#clk"); if (c) c.textContent = mmss(s); });
+  if (r.cancelled || !$("#reh")) return;
+  beep(); box.innerHTML = frame("rec", mic ? "Recording. Speak now." : "Speak now.", "I've finished");
+  const blob = await recordFor(180, r, s => { const c = $("#clk"); if (c) c.textContent = mmss(s); });
+  if (r.cancelled) return;
+  beep(); if (micStream) { micStream.getTracks().forEach(t => t.stop()); micStream = null; }
+  if (blob && blob.size) await recPut({ kind: "pres", label: "Presentation rehearsal", at: Date.now(), blob, pack: PACK.id, mode: root.mode });
+  run = null; wakeOff(); if (!$("#reh")) return;
+  $("#reh").innerHTML = rehIdle(`<div class="fb ok">${blob && blob.size ? "Saved. Listen back below, then score yourself." : "Finished. Nothing was recorded."}</div>`);
+  renderRecs("#recs-pres", x => x.kind === "pres" && mine(x), "No rehearsals recorded yet.");
+}
+
+views.qa = () => `
+${head("My project 3 of 3", "Four questions I haven't seen", "Each question is asked in Italian and plays twice. Then you have 40 seconds to answer. The recording runs the full 40 seconds. A different set every time.")}
+<div class="grid2">
+  <div class="panel" id="sim" data-nofold></div>
+  <div class="stack">
+    <div class="panel"><h2>What the questions can ask you to do</h2>
+      <div class="chips" lang="it">${Object.keys(QTYPES).map(k => `<span class="chip ${k === "conf" || k === "rifl" ? "key" : ""}">${QTYPES[k]}</span>`).join("")}</div>
+      <p class="muted small">Questions can be about any of the six prompt factors, even the three you did not choose. Every practice set here includes one comparison or reflection (blue): that answer is where the culture points are.</p></div>
+    <div class="panel soft"><h2>Fill the 40 seconds</h2><div class="steps"><div><b>1</b> Answer</div><div><b>2</b> Give an example</div><div><b>3</b> Explain or compare</div></div>
+      <p class="small">Missing a word? Talk around it: <span lang="it">«è una specie di…», «cioè…»</span>. Note every part of the question while it plays twice.</p></div>
+    ${ta("qa.notes", "Notes while I listen", { cls: "short" })}
+  </div>
+</div>
+<div class="panel" id="review" data-nofold></div>
+<div class="panel"><div class="row between"><h2>Score myself</h2><b id="tot-qs">${total(RUBRIC_QA, "qs")} / 9</b></div>${scoreRow(RUBRIC_QA, "qs")}</div>
+<div class="panel"><h2 lang="it">Modulo di feedback sulla Practice Q&amp;A</h2><p class="muted small">College Board's practice form. Listen back, then mark each line.</p>${critTable(CRIT_QA, "qf")}</div>
+<div class="panel"><h2 lang="it">Scheda preparatoria per il Project Q&amp;A</h2>
+  <p>Write four questions you think the committee could ask after <b>your</b> presentation. Mix the kinds of question above. Then answer them out loud.</p>
+  <div class="grid2">${[1, 2, 3, 4].map(n => ta("aq" + n, "Question " + n, { it: "Domanda " + n, cls: "short" })).join("")}</div></div>
+${foot("qa", "")}`;
+function simIdle(note) {
+  return `<h2>Simulator</h2><div class="steps">${[1, 2, 3, 4].map(n => `<div>Question ${n}</div>`).join("")}</div>
+  <div id="voicemsg">${voiceMsg()}</div>${note || ""}
+  <div class="row"><button class="primary" data-act="qastart">Start a set of four</button><button data-act="voicetest">Test the Italian voice</button></div>
+  <label class="chk"><input type="checkbox" data-k="me.showq" ${F("me.showq") ? "checked" : ""}>Show each question as text while it plays (hearing accommodation: only if your teacher tells you to)</label>
+  <p class="muted small">Without that box it is audio only, and the written questions appear after all four answers. The app keeps the recordings of your last 3 sets: download any answer you want to keep longer.</p>`;
+}
+function reviewHTML() {
+  if (!P().lastQA.length) return `<h2>After all four answers</h2><p class="muted">Your last set appears here: each recording with its written question.</p>`;
+  return `<h2>My last set</h2>` + P().lastQA.map((q, i) => `<div class="stack" style="gap:6px"><div><b>Question ${i + 1}</b> <span class="pill">${QTYPE_EN[q.t]}</span></div><div class="itbox" lang="it">${esc(q.q)}</div><div id="qrec${i}"></div></div>`).join("");
+}
+async function renderReview() {
+  const el = $("#review"); if (!el) return; el.innerHTML = reviewHTML();
+  const last = P().lastQA; if (!last.length) return;
+  const all = await recAll();
+  last.forEach((q, i) => renderRecs("#qrec" + i, r => r.id === q.rec, "No recording for this answer.", all));
+}
+after.qa = () => { $("#sim").innerHTML = simIdle(); renderReview(); };
+function pickSet() {
+  const types = Object.keys(QB()), sh = a => a.map(x => [Math.random(), x]).sort((a, b) => a[0] - b[0]).map(x => x[1]);
+  const key = sh(["conf", "rifl"])[0], rest = sh(types.filter(t => t !== key)).slice(0, 3);
+  const chosen = sh([key].concat(rest));
+  return chosen.map(t => {
+    let pool = QB()[t].map((q, i) => ({ id: t + i, q })).filter(x => !P().used.includes(x.id));
+    if (!pool.length) { P().used = P().used.filter(id => !id.startsWith(t)); pool = QB()[t].map((q, i) => ({ id: t + i, q })); }
+    const p = sh(pool)[0]; P().used.push(p.id); return { t, q: p.q };
+  });
+}
+async function qaSet() {
+  stopAll(); const r = run = { cancelled: false, skip: false }, proj = P(), mode = root.mode; wakeOn(); document.body.classList.add("busy");
+  let mic = true; try { await getMic(); } catch (e) { mic = false; }
+  if (r.cancelled || !$("#sim")) return;
+  const set = pickSet(), textMode = voiceState() === "none", showQ = !!F("me.showq"), setId = Date.now(), out = [];
+  const frame = (i, phase, label, extra) => `<h2>Simulator</h2><div class="livebar"><div class="steps">${[0, 1, 2, 3].map(n => `<div class="${n < i ? "done" : n === i ? "now" : ""}">Question ${n + 1}</div>`).join("")}</div>
+    <div class="clockbox ${phase === "rec" ? "live" : ""}"><div class="clock" id="clk">${phase === "rec" ? "0:40" : "…"}</div><span id="lbl">${label}</span></div>
+    <div class="row"><button data-act="qastop">Stop this set</button></div></div>${extra || ""}
+    ${mic ? "" : `<div class="note">No microphone: the timer runs, but nothing is recorded.</div>`}`;
+  const qtext = i => `<div class="itbox" lang="it">${esc(set[i].q)}</div>`;
+  for (let i = 0; i < 4; i++) {
+    for (let play = 1; play <= 2; play++) {
+      if (r.cancelled || !$("#sim")) return;
+      $("#sim").innerHTML = frame(i, "listen", `Listen · play ${play} of 2`, textMode || showQ ? qtext(i) : "");
+      if (textMode) await wait(9000, r); else await speak(set[i].q, r);
+      if (r.cancelled) return; await wait(1200, r);
+    }
+    if (r.cancelled || !$("#sim")) return;
+    beep(); $("#sim").innerHTML = frame(i, "rec", mic ? "Recording. Answer now." : "Answer now.", showQ ? qtext(i) : "");
+    const blob = await recordFor(40, r, s => { const c = $("#clk"); if (c) c.textContent = mmss(s); });
+    if (r.cancelled) return;
+    let id = null; if (blob && blob.size) id = await recPut({ kind: "qa", label: "Q&A answer " + (i + 1), at: Date.now(), blob, pack: PACK.id, mode, set: setId });
+    out.push({ t: set[i].t, q: set[i].q, rec: id }); beep(); await wait(1500, r);
+  }
+  if (r.cancelled) return;
+  if (micStream) { micStream.getTracks().forEach(t => t.stop()); micStream = null; }
+  proj.lastQA = out; commit(); run = null; wakeOff(); await pruneQA(3); if (!$("#sim")) return;
+  $("#sim").innerHTML = simIdle(`<div class="fb ok">Set finished. Read the questions and listen back below, then score yourself.</div>`);
+  renderReview(); const rv = $("#review"); if (rv) rv.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+views.pacchetto = () => {
+  const pr = PR(), pk = pr.packet || [];
+  return `
+${head(isPractice() ? "Practice packet" : "Real project", `<span lang="it">${esc(pr.title || "La traccia del progetto")}</span>`, isPractice() ? `A made-up packet in the same layout as College Board's: a prompt with six factors, four reflection questions and six sources. It is for learning the steps. The real packet arrives in ${PACK.dates.packet} and will be different.` : "The real prompt, its six factors and the four reflection questions. The real sources are in your AP Digital Portfolio, or come from your teacher.")}
+${modeSwitch()}
+${pr.packetNote ? `<div class="note">${pr.packetNote}</div>` : ""}
+<div class="panel"><h2 lang="it">Traccia</h2><p lang="it">${esc(pr.prompt.it)}</p>${pr.prompt.en ? `<p class="muted small">${esc(pr.prompt.en)}</p>` : ""}
+  <div class="tablewrap"><table lang="it"><tr><th></th><th>Fattori</th><th>Esempi</th></tr>${pr.factors.map(f => `<tr><td>${f.group === "persp" ? "Prospettive" : "Prodotti e pratiche"}</td><td>${f.id}. ${esc(f.name)}</td><td>${esc(f.ex)}</td></tr>`).join("")}</table></div></div>
+${pk.map(s => `<div class="panel"><div class="row between"><h2 lang="it">Fonte ${s.n}</h2><span class="pill">${s.real}</span></div>
+  <p lang="it"><i>${esc(s.intro)}</i></p>${s.title ? `<h3 lang="it">${esc(s.title)}</h3>` : ""}
+  ${s.audio ? `<div class="row noprint"><button class="primary" data-act="srcplay" data-a="${s.n}">Listen</button><button data-act="srcstop">Stop</button><button data-act="srcshow" data-a="${s.n}">${ui.shown[s.n] ? "Hide the script" : "Show the script"}</button><span class="muted small" role="status" id="srcst${s.n}"></span></div><p class="muted small">This is an audio source: listen first, twice, before you read. The device's Italian voice reads it; your teacher may read it aloud instead.</p>` : ""}
+  ${s.table ? `<div class="tablewrap"><table lang="it">${s.table.map((row, i) => `<tr>${row.map(c => i === 0 ? `<th>${esc(c)}</th>` : `<td>${esc(c)}</td>`).join("")}</tr>`).join("")}</table></div>` : ""}
+  ${s.body && (!s.audio || ui.shown[s.n]) ? s.body.map(b => `<p lang="it">${esc(b)}</p>`).join("") : ""}</div>`).join("")}
+<div class="panel"><h2>Initial written reflection · <span lang="it">Riflessione iniziale scritta</span></h2>
+  <p class="muted small">Answer all four questions. Use information from at least three of the sources. It is a reflection, not a summary. College Board does not score it.</p>
+  ${pr.reflection.map((q, i) => ta("r" + i, (i + 1) + ".", { it: q, cls: "tall" })).join("")}</div>
+<div class="panel"><h2 lang="it">Modulo di feedback sulla Riflessione iniziale scritta</h2>${critTable(CRIT_RIFL, "rf")}</div>
+${pr.facts ? `<div class="panel soft"><h2>Where the real facts come from</h2><p class="small">${pr.facts}</p></div>` : ""}
+${foot("pacchetto", "")}`;
+};
+
+const sumSec = (t, rows) => { const r = rows.filter(x => String(x[1]).trim()); return r.length ? `<div class="panel"><h2>${t}</h2>${r.map(x => `<div><b>${esc(x[0])}</b><div lang="it" style="white-space:pre-wrap">${esc(x[1])}</div></div>`).join("")}</div>` : ""; };
+function cardSummary(i) {
+  const k = n => F(`c${i}.${n}`), fx = (P().f[`c${i}.fx`] || []).filter(id => factor(id)).map(id => id + ". " + factor(id).name).join("; ");
+  return sumSec("Source card " + (i + 1), [["Tipo di fonte", k("tipo")], ["Titolo", k("titolo")], ["Autore/Creatore", k("autore")], ["Data", k("data")], ["Where I found it", k("link")], ["Riassunto dei punti chiave", k("riassunto")], ["Parole/Espressioni chiave", k("parole")], ["Domanda all'autore", k("domanda")], ["Prodotti e/o pratiche", k("prodotti")], ["Prospettive", k("prospettive")], ["Fattori", fx], ["Esempi per i fattori", k("fattori")], ["Confronto con la mia comunità", k("confronto")]]);
+}
+function summaryHTML() {
+  let h = sumSec("The three P's", [["A practice in my community", F("trep.pratica")], ["The bridge", F("trep.ponte")]]);
+  for (let i = 0; i < P().nCards; i++) h += cardSummary(i);
+  h += sumSec("Research plan", [["Argomento", F("p.topic")], ["Comunità o regione", F("p.community")], ["Fattori scelti", picks().map(id => id + ". " + factor(id).name).join("; ")]]
+    .concat(picks().flatMap(id => [["Pertinenza · fattore " + id, F("p.rel.f" + id)], ["Informazioni da approfondire · fattore " + id, F("p.info.f" + id)]]))
+    .concat([["Termini di ricerca", F("p.terms")], ["Risorse", F("p.res")], ["Persone o enti", F("p.people")], ["Organizzazione", F("p.org")]])
+    .concat(Array.from({ length: P().nGoals }, (_, n) => ["Obiettivo " + (n + 1), [F("g" + n + ".goal"), F("g" + n + ".when")].filter(Boolean).join(" — ")])));
+  h += sumSec("PPR draft", PPR_BOXES.map(b => [b[1], F("ppr." + b[0])]));
+  h += sumSec("Scores I gave myself", [["Presentation", total(RUBRIC_PRES, "ps") === "–" ? "" : total(RUBRIC_PRES, "ps") + " / 11"], ["Q&A", total(RUBRIC_QA, "qs") === "–" ? "" : total(RUBRIC_QA, "qs") + " / 9"]]);
+  h += sumSec("Possible Q&A questions", [1, 2, 3, 4].map(n => ["Domanda " + n, F("aq" + n)]));
+  h += sumSec("Riflessione iniziale scritta", PR().reflection.map((q, i) => [q, F("r" + i)]));
+  return h || `<p class="muted">Nothing written yet.</p>`;
+}
+views.lavoro = () => `
+${head("Save and print", "Keep my work safe", "Your work is saved on this device only, in this browser. Nobody else can see it, not even your teacher. Download a backup often, and always before you hand in.")}
+${modeSwitch()}
+<div class="panel noprint"><h2>My name</h2>${tx("me.name", "First and last name. It prints at the top of everything you print.")}</div>
+<div class="grid2 noprint">
+  <div class="panel"><h2>Backup file</h2><p>One small file with everything you typed${hasReal() ? ", practice and real project" : ""}. Keep it in your Google Drive. Recordings are not included: download those one by one.</p>
+    <div class="row"><button class="primary" data-act="backup">Download my work</button><label class="btn" for="restore" tabindex="0" role="button">Load a backup file</label><input type="file" id="restore" accept=".json,application/json" hidden></div><div id="bmsg"></div></div>
+  <div class="panel"><h2>Hand in as a PDF</h2><p>Press the button, then choose <b>Save as PDF</b> as the printer. Attach the PDF, and any recordings you downloaded, to the assignment.</p>
+    <div class="row"><button class="primary" data-act="print">Print all my work</button></div></div>
+</div>
+<div class="panel noprint"><h2>All my recordings</h2><div id="recs-all"></div></div>
+<h2>Everything I have written${hasReal() ? " · " + (isPractice() ? "practice prompt" : "real project") : ""}</h2>
+${summaryHTML()}
+<div class="panel noprint"><h2>Start over</h2><p class="muted small">Erases everything typed and recorded on this device${hasReal() ? ", for the practice prompt and the real project" : ""}. Download a backup first.</p><div class="row"><button class="danger" data-act="erase">${ui.confirmErase ? "Press again to erase everything" : "Erase all my work"}</button></div></div>
+<div class="navfoot noprint"><a class="btn" href="#pacchetto">Back</a><span></span></div>`;
+after.lavoro = () => {
+  renderRecs("#recs-all", () => true, "No recordings on this device.");
+  $("#restore").addEventListener("change", e => {
+    const f = e.target.files[0]; if (!f) return; const rd = new FileReader();
+    rd.onload = () => {
+      let raw = null, s = null; try { raw = JSON.parse(rd.result); s = normalize(raw); } catch (err) { }
+      e.target.value = "";
+      if (!s) { ui.pending = null; $("#bmsg").innerHTML = `<div class="fb no">${raw && raw.v === 2 && raw.pack && raw.pack !== PACK.id ? "That backup is from a different year or theme (" + esc(raw.pack) + "). It cannot be loaded here." : "That file is not a Ricerca AP backup."}</div>`; return; }
+      ui.pending = s;
+      $("#bmsg").innerHTML = `<div class="fb mid" tabindex="-1" id="bask"><b>Replace what is on this device?</b> The backup was saved ${s.at ? "on " + new Date(s.at).toLocaleString() : "at an unknown time"}. Everything typed on this device now will be replaced by it.<div class="row" style="margin-top:8px"><button class="primary" data-act="restoreyes">Yes, load the backup</button><button data-act="restoreno">Cancel</button></div></div>`;
+      $("#bask").focus();
+    };
+    rd.readAsText(f);
+  });
+};
+
+/* ============================ actions ============================ */
+const act = {
+  print() { delete document.body.dataset.print; window.print(); },
+  printppr() { printOnly(`<h1>My PPR draft</h1><p class="muted small">Practice copy. The real PPR is typed into the AP Digital Portfolio.</p>` + PPR_BOXES.map(b => `<div><b>${b[1]}</b><div class="printval" lang="it">${esc(F("ppr." + b[0]))}</div></div>`).join("")); },
+  printcards() { let h = ""; for (let i = 0; i < P().nCards; i++) h += cardSummary(i); printOnly(`<h1>My source cards</h1>` + (h || `<p>No source cards filled in yet.</p>`)); },
+  menu() { const t = $(".top"), open = !t.classList.contains("open"); t.classList.toggle("open", open); $("#menubtn").setAttribute("aria-expanded", open); },
+  mode(el) { const m = el.dataset.a; if (m === root.mode || (m === "real" && !hasReal())) return; stopAll(); root.mode = m; ui.pickMsg = null; ui.confirmGoal = ui.confirmCard = false; commit(); render(true); },
+  restoreyes() { if (!ui.pending) return; root = ui.pending; ui.pending = null; if (root.mode === "real" && !hasReal()) root.mode = "practice"; commit(); render(); const m = $("#bmsg"); if (m) m.innerHTML = `<div class="fb ok">Backup loaded.</div>`; },
+  restoreno() { ui.pending = null; const m = $("#bmsg"); if (m) m.innerHTML = ""; },
+  card(el) { const c = CARDS[ui.cards[ui.card]]; ui.cardDone = el.dataset.a; if (ui.cardDone === c.a) ui.score++; render(true); },
+  cardnext() { ui.card++; if (ui.card >= CARDS.length) { ui.card = 0; ui.score = 0; ui.cards = shuffle(ui.cards); } ui.cardDone = null; render(true); },
+  yn(el) { ui.ynDone = el.dataset.a === "1"; render(true); },
+  ynnext() { ui.yn++; if (ui.yn >= YESNO.length) { ui.yn = 0; ui.yns = shuffle(ui.yns); } ui.ynDone = null; render(true); },
+  tab(el) { ui.tab = el.dataset.a; render(true); },
+  fake(el) { ui.fake = Math.max(0, Math.min(FAKES.length - 1, ui.fake + +el.dataset.a)); ui.verdict = null; render(true); },
+  verdict(el) { ui.verdict = el.dataset.a; const ch = $$("#app .chk input").map(c => c.checked); render(true); $$("#app .chk input").forEach((c, i) => c.checked = ch[i]); },
+  cardsel(el) { P().cur = +el.dataset.a; ui.confirmCard = false; save(); render(true); },
+  cardadd() { P().nCards++; P().cur = P().nCards - 1; save(); render(); },
+  carddel() {
+    if (!ui.confirmCard) { ui.confirmCard = true; return render(true); }
+    const i = P().cur, n = P().nCards, nf = {};
+    Object.keys(P().f).forEach(k => { const m = k.match(/^c(\d+)\.(.+)$/); if (!m) { nf[k] = P().f[k]; return; } const j = +m[1]; if (j < i) nf[k] = P().f[k]; else if (j > i) nf[`c${j - 1}.${m[2]}`] = P().f[k]; });
+    P().f = nf; P().nCards = n - 1; P().cur = Math.max(0, i - 1); ui.confirmCard = false; save(); render();
+  },
+  cardfx(el) { const k = `c${P().cur}.fx`, a = (P().f[k] || []).slice(), id = +el.dataset.a, j = a.indexOf(id); if (j < 0) a.push(id); else a.splice(j, 1); a.sort(); P().f[k] = a; save(); render(true); },
+  pick(el) { const id = +el.dataset.a, pk = P().pick = picks(), j = pk.indexOf(id); ui.pickMsg = null; if (j >= 0) pk.splice(j, 1); else if (pk.length < 3) pk.push(id); else ui.pickMsg = "You already have three factors. Tap one of your three to take it off, then choose the new one."; save(); render(true); },
+  goaladd() { ui.confirmGoal = false; if (P().nGoals < 5) P().nGoals++; save(); render(true); },
+  goaldel() { const n = P().nGoals - 1; if (n < 3) return; if ((F("g" + n + ".goal") + F("g" + n + ".when")).trim() && !ui.confirmGoal) { ui.confirmGoal = true; return render(true); } ui.confirmGoal = false; P().nGoals = n; delete P().f["g" + n + ".goal"]; delete P().f["g" + n + ".when"]; save(); render(true); },
+  rehstart() { rehearsal(); },
+  rehskip() { if (run) run.skip = true; },
+  rehstop() { stopAll(); $("#reh").innerHTML = rehIdle(); },
+  qastart() { primeVoice(); qaSet(); },
+  qastop() { stopAll(); $("#sim").innerHTML = simIdle(`<div class="fb mid">Set stopped. Nothing from it was kept in “My last set”.</div>`); },
+  async voicetest() { const ok = await speak("Buongiorno. Questa è la voce italiana del simulatore.", null); if (!ok) $("#voicemsg").innerHTML = voiceMsg() || `<div class="note">The voice did not play.</div>`; },
+  async recdel(el) { if (el.dataset.sure) { await recDel(+el.dataset.id); render(true); } else { el.dataset.sure = "1"; el.textContent = "Press again to delete"; } },
+  srcplay(el) {
+    const s = (PR().packet || []).find(x => x.n === +el.dataset.a); if (!s) return;
+    stopAll(); primeVoice(); const r = run = { cancelled: false }; wakeOn();
+    const parts = s.body.reduce((a, p) => a.concat(sentences(p.replace(/^[A-Za-zÀ-ÿ]+:\s*/, ""))), []), say = t => { const st = $("#srcst" + s.n); if (st) st.textContent = t; };
+    (async () => {
+      for (let i = 0; i < parts.length; i++) {
+        if (r.cancelled) return; say(`Playing · sentence ${i + 1} of ${parts.length}`);
+        const ok = await speak(parts[i], r); if (r.cancelled) return;
+        if (!ok) { say("No Italian voice on this device. Use “Show the script”, or ask your teacher to read it aloud."); break; }
+        if (i === parts.length - 1) say("Finished."); else await wait(250, r);
+      }
+      if (run === r) { run = null; wakeOff(); }
+    })();
+  },
+  srcstop() { stopAll(); $$("[id^=srcst]").forEach(e => { e.textContent = ""; }); },
+  srcshow(el) { const n = +el.dataset.a; ui.shown[n] = !ui.shown[n]; render(true); },
+  backup() { saveNow(); const who = F("me.name").trim().replace(/[^A-Za-zÀ-ÿ0-9]+/g, "-").replace(/^-|-$/g, ""), b = new Blob([JSON.stringify(root, null, 1)], { type: "application/json" }), u = URL.createObjectURL(b), a = document.createElement("a"); a.href = u; a.download = "ricerca-ap-backup-" + (who ? who + "-" : "") + new Date().toISOString().slice(0, 10) + ".json"; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 2000); const m = $("#bmsg"); if (m) m.innerHTML = `<div class="fb ok">Backup downloaded. Move it to your Google Drive.</div>`; },
+  async erase() { if (!ui.confirmErase) { ui.confirmErase = true; return render(true); } stopAll(); root = blankRoot(); commit(); await recClear(); ui.confirmErase = false; render(); }
+};
+/* After a button redraws the page, put the keyboard focus back where the student is working. */
+let focusKey = null;
+const fkey = b => b.dataset.act + "|" + (b.dataset.a || "") + "|" + (b.dataset.id || "");
+function restoreFocus() {
+  const fk = focusKey; focusKey = null; if (!fk) return;
+  const cur = document.activeElement; if (cur && cur !== document.body && document.body.contains(cur)) return;
+  const btns = $$("[data-act]").filter(b => !b.disabled);
+  const t = (fk.g && $(`[data-focus="${fk.g}"]`)) || btns.find(b => fkey(b) === fk.k) || btns.find(b => b.dataset.act === fk.k.split("|")[0]);
+  if (t) t.focus({ preventScroll: true });
+}
+function toggleFold(h) { const p = h.parentElement, open = !p.classList.contains("open"); p.classList.toggle("open", open); h.setAttribute("aria-expanded", open); ui.fold[p.dataset.fold] = open; }
+function closeMenu() { $(".top").classList.remove("open"); $("#menubtn").setAttribute("aria-expanded", "false"); }
+document.addEventListener("click", e => {
+  const fh = e.target.closest(".foldhead");
+  if (fh && !e.target.closest("button,a,input,select,textarea,label")) { toggleFold(fh); return; }
+  const el = e.target.closest("[data-act]");
+  if (el && act[el.dataset.act]) { e.preventDefault(); focusKey = { k: fkey(el), g: el.dataset.fg || "" }; act[el.dataset.act](el); restoreFocus(); }
+  else if (!e.target.closest(".top")) closeMenu();
+});
+document.addEventListener("keydown", e => {
+  const t = e.target, go = e.key === "Enter" || e.key === " ";
+  if (e.key === "Escape") closeMenu();
+  if (go && t.matches && t.matches(".foldhead")) { e.preventDefault(); toggleFold(t); }
+  if (go && t.matches && t.matches("label.btn[for]")) { e.preventDefault(); const i = document.getElementById(t.htmlFor); if (i) i.click(); }
+});
+document.addEventListener("input", e => {
+  const el = e.target, k = el.dataset && el.dataset.k; if (!k) return;
+  bag(k)[k] = el.type === "checkbox" ? el.checked : el.value; save();
+  if (k.startsWith("ppr.")) { const id = k.slice(4), c = pprCheck(el.value), cn = $("#cnt-" + id); cn.textContent = c.n + "/" + PPR_LIMIT; cn.classList.toggle("over", c.n > PPR_LIMIT); $("#msg-" + id).textContent = c.m; }
+  if (k.startsWith("ps.")) $("#tot-ps").textContent = total(RUBRIC_PRES, "ps") + " / 11";
+  if (k.startsWith("qs.")) $("#tot-qs").textContent = total(RUBRIC_QA, "qs") + " / 9";
+  if (k === "dove.kw") $("#queries").innerHTML = doveQueries();
+  if (k === "me.name") printHead();
+});
+
+/* ============================ router ============================ */
+let current = null;
+const mqPhone = window.matchMedia("(max-width:700px)");
+const FOLD_PAGES = ["scheda", "piano", "ppr", "qa", "pacchetto"];
+function route() { const id = location.hash.replace(/^#/, ""); return ROUTES.some(r => r.id === id) ? id : "start"; }
+function printHead() {
+  const r = ROUTES.find(x => x.id === route()), name = F("me.name").trim();
+  $("#printhead").innerHTML = `<div><b>Ricerca AP · ${esc(PACK.themeName)}</b> · ${r.title}${hasReal() ? " · " + (isPractice() ? "practice prompt" : "real project") : ""}</div><div>Name: ${name ? `<b>${esc(name)}</b>` : "________________________________"} &nbsp;·&nbsp; Printed: ${new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</div>`;
+}
+function printOnly(html) { $("#printonly").innerHTML = html; document.body.dataset.print = "only"; printHead(); window.print(); }
+/* Phone: long pages become a list of sections that open and close. */
+function foldify(id) {
+  if (!mqPhone.matches || !FOLD_PAGES.includes(id)) return;
+  let n = 0;
+  $$(".panel", app).forEach(p => {
+    if (p.hasAttribute("data-nofold") || p.tagName === "A" || p.parentElement.closest(".panel")) return;
+    const h = p.firstElementChild; if (!h || !(h.tagName === "H2" || (h.classList.contains("row") && $("h2", h)))) return;
+    const key = id + ":" + n, open = ui.fold[key] != null ? ui.fold[key] : n === 0; n++;
+    p.classList.add("fold"); p.classList.toggle("open", open); p.dataset.fold = key;
+    h.classList.add("foldhead"); h.tabIndex = 0; h.setAttribute("role", "button"); h.setAttribute("aria-expanded", open);
+  });
+}
+function render(keepScroll) {
+  const id = route(), y = window.scrollY, r = ROUTES.find(x => x.id === id);
+  if (id !== current) { stopAll(); ui.confirmCard = ui.confirmErase = ui.confirmGoal = false; ui.pickMsg = null; ui.pending = null; }
+  let last = null;
+  $("#nav").innerHTML = ROUTES.map(r => { const g = r.grp !== last ? `<span class="grp">${r.grp}</span>` : ""; last = r.grp; return `${g}<a href="#${r.id}" class="${r.id === id ? "on" : ""}" ${r.id === id ? 'aria-current="page"' : ""}>${r.nav}</a>`; }).join("");
+  closeMenu(); printHead();
+  const mp = $("#modepill"); mp.hidden = !hasReal(); mp.textContent = isPractice() ? "Practice prompt" : "Real project";
+  if (keepScroll && run && (id === "ppr" || id === "qa")) return; /* never redraw over a running timer */
+  urls.forEach(u => URL.revokeObjectURL(u)); urls = [];
+  app.innerHTML = views[id](); fill(); if (after[id]) after[id](); foldify(id);
+  document.title = r.title + " · Ricerca AP · " + PACK.themeName;
+  if (keepScroll && id === current) window.scrollTo(0, y);
+  else { window.scrollTo(0, 0); if (current !== null) { const h = $("h1", app); if (h) { h.tabIndex = -1; h.focus({ preventScroll: true }); } } }
+  current = id;
+}
+window.addEventListener("hashchange", () => render());
+if (mqPhone.addEventListener) mqPhone.addEventListener("change", () => render(true)); else if (mqPhone.addListener) mqPhone.addListener(() => render(true));
+window.addEventListener("beforeprint", () => {
+  printHead();
+  $$("details", app).forEach(d => { d.dataset.was = d.open ? "1" : ""; d.open = true; });
+  $$("textarea, input[type=text], select", app).forEach(el => { const d = document.createElement("div"); d.className = "printval" + (el.tagName === "TEXTAREA" ? " big" : ""); d.lang = "it"; d.textContent = el.value; el.after(d); });
+});
+window.addEventListener("afterprint", () => {
+  $$(".printval", app).forEach(d => d.remove()); $$("details", app).forEach(d => { d.open = d.dataset.was === "1"; });
+  delete document.body.dataset.print; $("#printonly").innerHTML = "";
+});
+$(".brand").textContent = "Ricerca AP · " + PACK.themeName;
+setStatus(storageOK ? "ok" : "bad"); alertBar(); render();
+try { console.info("Ricerca AP " + APP_VERSION + " · created by " + MADE_BY + " · © 2026 " + MADE_BY); } catch (e) { }
+</script>
+</body>
+</html>
