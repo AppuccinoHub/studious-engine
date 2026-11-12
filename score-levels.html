@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Ricerca AP Score Levels</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="author" content="© Assunta Scotto">
+<meta name="copyright" content="© Assunta Scotto. Ricerca AP Score Levels. Created 2026-11-11.">
+<!-- © Assunta Scotto · Ricerca AP Score Levels · created 2026-11-11 · human- and AI-driven work directed by Assunta Scotto -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one narrow column. Level switch on top, then rubric, then the four parts of the project, then what raises the score. */
+:root{
+  --bg:#ffffff; --fg:#0f172a; --muted:#475569; --line:#cbd5e1; --soft:#f1f5f9;
+  --accent:#1d4ed8; --on-accent:#ffffff;
+  --inv-bg:#fff3a3; --inv-fg:#1f1a00; --err:#b42318; --fix:#0b6b3a;
+  --sans:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0b1220; --fg:#e6ebf5; --muted:#a8b3c7; --line:#33415a; --soft:#141d30;
+    --accent:#8ab4ff; --on-accent:#0b1220;
+    --inv-bg:#5c4b00; --inv-fg:#fff3c2; --err:#ff9b8f; --fix:#7fd9a6; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0b1220; --fg:#e6ebf5; --muted:#a8b3c7; --line:#33415a; --soft:#141d30;
+  --accent:#8ab4ff; --on-accent:#0b1220;
+  --inv-bg:#5c4b00; --inv-fg:#fff3c2; --err:#ff9b8f; --fix:#7fd9a6; color-scheme:dark;
+}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:16px;line-height:1.55}
+.wrap{max-width:46rem;margin:0 auto;padding-block:20px 32px;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));display:flex;flex-direction:column;gap:22px}
+h1{margin:0;font-size:1.6rem;line-height:1.2;font-weight:700;text-wrap:balance}
+h2{margin:0;font-size:1.05rem;font-weight:700}
+p{margin:0}
+.eyebrow{font-size:.75rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.muted{color:var(--muted)}
+.small{font-size:.875rem}
+.stack{display:flex;flex-direction:column;gap:10px}
+.box{border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.box.accent{border:2px solid var(--accent)}
+.box.soft{background:var(--soft)}
+details summary{cursor:pointer;font-weight:600;min-height:44px;display:flex;align-items:center}
+details[open] summary{margin-bottom:8px}
+.levels{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+button.pick{font-family:inherit;min-height:48px;border-radius:10px;border:2px solid var(--line);background:var(--bg);color:var(--fg);font-weight:600;font-size:.95rem;cursor:pointer;padding:6px 8px}
+.levels button.pick{font-size:1.25rem;font-weight:700;min-height:54px}
+button.pick[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+button.pick:focus-visible, summary:focus-visible, input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.row{display:flex;flex-direction:column;gap:4px}
+.row .top{display:flex;justify-content:space-between;gap:8px;font-size:.9rem}
+.row .top b{font-variant-numeric:tabular-nums}
+.bar{height:8px;border-radius:4px;background:var(--line)}
+.bar i{display:block;height:8px;border-radius:4px;background:var(--accent)}
+.ital p + p{margin-top:.8em}
+.ital{font-size:1.02rem}
+mark.inv{background:var(--inv-bg);color:var(--inv-fg);padding:0 2px;border-radius:3px}
+.err{text-decoration:underline wavy var(--err);text-underline-offset:3px}
+.fix{color:var(--fix);font-weight:600}
+.fix::before{content:" → "}
+.ppr{display:flex;flex-direction:column;gap:8px}
+.pbox{border:1px solid var(--line);border-radius:8px;padding:10px;background:var(--bg);display:flex;flex-direction:column;gap:4px}
+.pbox .lab{font-size:.75rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.flag{color:var(--err);text-transform:none;letter-spacing:0}
+.ok{color:var(--fix);text-transform:none;letter-spacing:0}
+.qa{display:flex;flex-direction:column;gap:14px}
+.q{font-weight:600}
+.noans{color:var(--muted);font-style:italic}
+ul{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:6px}
+.check{display:flex;gap:10px;align-items:center;min-height:44px;font-weight:500}
+.check input{width:22px;height:22px;accent-color:var(--accent)}
+dl{margin:0;display:flex;flex-direction:column;gap:8px}
+dt{font-size:.75rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+dd{margin:0}
+footer{border-top:1px solid var(--line);padding-top:12px;font-size:.8rem;color:var(--muted)}
+@media (prefers-reduced-motion: no-preference){.bar i{transition:width .2s ease}}
+</style>
+</head>
+<body>
+<div class="wrap" data-author="© Assunta Scotto" data-created="2026-11-11">
+
+<header class="stack">
+  <div class="eyebrow">Ricerca AP · Example projects</div>
+  <h1>One project, five levels</h1>
+  <p class="muted">Same prompt and same topic at every level: the pizza tradition in Naples. Tap a level to see the whole project at that level and what would raise it.</p>
+  <p class="small muted">The levels and rubric points are a teacher's estimate. College Board has not published scored samples, and this is not a College Board score.</p>
+</header>
+
+<details class="box" id="prompt-box">
+  <summary>The practice prompt and the six factors</summary>
+  <div class="stack">
+    <p class="small muted">A made-up practice prompt on a non-music theme.</p>
+    <p lang="it">Una rivista italiana per studenti prepara un numero speciale sul cibo. Ti chiede una presentazione su come una tradizione gastronomica racconta l'identità di una comunità di lingua italiana. Scegli una comunità o una regione e includi almeno tre dei sei fattori, tra cui almeno una prospettiva.</p>
+    <p class="small muted">An Italian student magazine is preparing a special issue on food. It asks you for a presentation on how a food tradition tells the identity of an Italian-speaking community. Choose a community or region and include at least three of the six factors, with at least one perspective.</p>
+    <dl lang="it">
+      <div><dt>Prodotti e pratiche</dt>
+        <dd>1. Piatti e ingredienti tipici<br>2. Mestieri e saperi artigianali<br>3. Luoghi e momenti del mangiare insieme<br>4. Regole, marchi e riconoscimenti</dd></div>
+      <div><dt>Prospettive</dt>
+        <dd>5. Identità e orgoglio della comunità<br>6. Valori della condivisione e dell'ospitalità</dd></div>
+    </dl>
+  </div>
+</details>
+
+<section class="stack" aria-label="Level">
+  <h2>Level</h2>
+  <div class="levels" id="levels"></div>
+  <div class="stack" style="gap:4px">
+    <p id="level-name" style="font-weight:700;font-size:1.1rem"></p>
+    <p id="level-sum" class="muted"></p>
+    <p id="level-factors" class="small muted"></p>
+  </div>
+</section>
+
+<section class="box" aria-label="Rubric points">
+  <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:baseline">
+    <h2>Rubric points</h2>
+    <span class="small" style="color:var(--accent);font-weight:600">Estimate</span>
+  </div>
+  <p class="small muted" style="font-weight:600">Presentation</p>
+  <div class="stack" id="rows-talk"></div>
+  <p class="small muted" id="why-talk"></p>
+  <p class="small muted" style="font-weight:600">Q&amp;A</p>
+  <div class="stack" id="rows-qa"></div>
+  <p class="small muted" id="why-qa"></p>
+  <p class="small muted">Delivery (2 points) and Fluency (2 points) need a recording. They cannot be judged from text, so they are left out.</p>
+</section>
+
+<section class="stack" aria-label="Parts of the project">
+  <h2>The project at this level</h2>
+  <div class="tabs" id="tabs"></div>
+  <label class="check" for="show-err"><input type="checkbox" id="show-err"> Show language errors and corrections</label>
+  <div class="box soft" id="part" lang="it"></div>
+  <p class="small muted"><mark class="inv">Yellow</mark> marks details invented for the example: there is no real student, town or interview.</p>
+</section>
+
+<section class="box accent" aria-label="How to raise the score">
+  <h2 id="raise-title" style="color:var(--accent)"></h2>
+  <ul id="raise"></ul>
+</section>
+
+<details class="box" id="facts-box">
+  <summary>Where the facts come from</summary>
+  <div class="stack small">
+    <p>Checked on 2026-11-11 against the pages below.</p>
+    <ul>
+      <li>UNESCO, "Art of Neapolitan 'Pizzaiuolo'", inscribed 2017: four phases, wood-fired oven, learned in the bottega, about 3,000 pizzaiuoli in Naples, fosters social gatherings and exchange between generations.</li>
+      <li>Regulation (EU) No 97/2010, Pizza Napoletana TSG: shaped by hand only, wood-fired oven only, baked 60 to 90 seconds, Margherita presented to the Queen in 1889.</li>
+      <li>Associazione Verace Pizza Napoletana, "La storia": founded in Naples in 1984.</li>
+      <li>MeteoWeb, 7 December 2017: over 2 million signatures for the UNESCO candidacy.</li>
+    </ul>
+    <p><b>Not checked against a source:</b> the description of pizza a portafoglio (folded, eaten on the street, low price). It is common knowledge, but confirm it before students see this.</p>
+  </div>
+</details>
+
+<footer>© Assunta Scotto · Ricerca AP · 2026-11-11. AP is a trademark of College Board, which does not endorse this tool.</footer>
+</div>
+
+<script>
+/* © Assunta Scotto · Ricerca AP Score Levels · 2026-11-11 */
+(function(){
+"use strict";
+try{console.info("© Assunta Scotto · Ricerca AP Score Levels · 2026-11-11");}catch(e){}
+
+var Q=[
+ "Perché hai scelto questo argomento?",
+ "Come si confronta questa tradizione con il modo di mangiare nella tua comunità?",
+ "Secondo te, i marchi e i riconoscimenti ufficiali aiutano a proteggere una tradizione? Perché?",
+ "Che consiglio daresti a un turista che vuole conoscere davvero questa tradizione?"
+];
+var QNOTE=["Explain","Compare with your community","Opinion, on a factor most levels did not choose (factor 4)","Give advice"];
+var PLAB=["Title","Introduction","Main idea and key detail 1","Main idea and key detail 2","Main idea and key detail 3","Main idea and key detail 4","Conclusion"];
+
+/* Markup inside the Italian text: [[wrong|right]] = language error, {{...}} = invented detail */
+var L={
+1:{
+ name:"Level 1 · Far from ready",
+ sum:"Off the prompt. One factor, no community, no perspective, and very little Italian that holds together.",
+ factors:"Factors used: 1 only. No perspective.",
+ talkPts:[0,0,0,1], qaPts:[0,0,1],
+ whyTalk:"Never names Naples or any community, so the task is not addressed. Seven short sentences with no order. Basic errors in almost every sentence.",
+ whyQa:"One question unanswered, one answered partly in English, none with an example.",
+ ppr:[{t:"Pizza"},{t:"Io parlo della pizza perché mi piace molto.",s:1},{t:"La pizza è buona e ha formaggio e pomodoro.",s:1},{t:"In Italia mangiano molta pizza.",s:1},{t:""},{t:""},{t:""}],
+ talkNote:"About 40 seconds of a 3-minute task.",
+ talk:"Ciao. [[Io piace|Mi piace]] la pizza. La pizza è buona. La pizza ha formaggio e pomodoro. [[Io mangio pizza ogni venerdì con mia famiglia|Mangio la pizza ogni venerdì con la mia famiglia]]. [[Mio pizza favorita è pepperoni|La mia pizza preferita è quella al salame piccante]]. In Italia [[mangiano molto pizza|mangiano molta pizza]]. È... finito.",
+ qa:["Perché... [[pizza è buona|la pizza è buona]].","","I don't know... non so.","Sì. Pizza."],
+ sources:["Wikipedia in inglese, «Pizza» (enciclopedia generale)"],
+ terms:"pizza",
+ card:null,
+ resNote:"One source, in English, and it is a general encyclopedia. No source card. The written reflection answers one of the four questions in two sentences.",
+ raise:["Answer the prompt: name the community (Napoli) and the topic in the first sentence.","Use three factors, and make one of them a perspective: what do Neapolitans believe or value about pizza?","PPR: key words only, no sentences, and fill all seven boxes.","Read in Italian. «Pepperoni» is a false friend: in Italian «peperoni» are peppers."]
+},
+2:{
+ name:"Level 2 · Incomplete",
+ sum:"On topic and names Naples, but thin. Two factors, both products. Facts are listed with no detail and nothing about what the community believes.",
+ factors:"Factors used: 1 and 4. No perspective.",
+ talkPts:[1,0,1,1], qaPts:[1,0,1],
+ whyTalk:"Two factors instead of three and no perspective. Facts are stated, not explained. There is a start but no closing. Frequent errors, though the meaning is usually clear.",
+ whyQa:"Every question gets an answer, but one line each. The question about marchi is misread as shopping brands.",
+ ppr:[{t:"La pizza di Napoli"},{t:"Io parlo della pizza di Napoli e degli ingredienti e delle regole",s:1},{t:"pomodoro, mozzarella, basilico"},{t:"forno"},{t:"La Margherita ha il nome di una regina italiana molto famosa",s:1},{t:"STG · UNESCO"},{t:"famosa e buona"}],
+ talkNote:"About 1 minute 30 of a 3-minute task.",
+ talk:"Ciao. Io parlo della pizza [[di Napoli|a Napoli]]. La pizza ha pomodoro e mozzarella e basilico. [[Sono cotta in il forno|È cotta nel forno]]. La pizza Margherita [[è nominata per una regina|prende il nome da una regina]]. [[Io piace|Mi piace]] molto la Margherita.\n\nLa pizza ha un marchio che si chiama STG. Anche l'UNESCO ha detto che è importante nel 2017. [[Ci sono molti regole|Ci sono molte regole]] per fare la pizza. La pizza [[deve essere fatto|deve essere fatta]] con le mani.\n\nLa pizza è molto famosa e buona.",
+ qa:["Perché mi piace la pizza. [[È mio cibo preferito.|È il mio cibo preferito.]]","A Napoli la pizza è più buona. [[In America è non buona.|In America non è buona.]]","Il mio marchio preferito... non so. {{Compro la pizza al supermercato.}}","[[Io consiglio lui|Gli consiglio]] di mangiare la pizza Margherita."],
+ sources:["Wikipedia in italiano, «Pizza napoletana» (enciclopedia generale)","{{Un blog di ricette, «La vera pizza fatta in casa»}} (blog)"],
+ terms:"pizza napoletana · pizza Margherita storia",
+ card:{src:"Wikipedia, «Pizza napoletana»",sum:"La pizza napoletana è fatta con pomodoro e mozzarella. È famosa.",pp:"",persp:"",ask:"",cmp:""},
+ resNote:"Two sources of the same kind, and neither can be cited: Wikipedia is a map to find sources, not a source. The source card has a summary, but the products, practices and perspectives boxes are empty. The reflection answers two of the four questions.",
+ raise:["Add a third factor and make it a perspective: why are Neapolitans proud of this tradition?","Give each factor one specific detail. Which queen, and in what year? What does STG require?","Follow Wikipedia's footnotes to the real sources (UNESCO, the EU regulation) and cite those.","Finish with a closing sentence that goes back to the prompt.","PPR: two boxes are over ten words because they are sentences. Cut them to key words."]
+},
+3:{
+ name:"Level 3 · Meets the task, unevenly",
+ sum:"Three factors, one a perspective. The culture link is stated but not explained, details are general, and errors sometimes get in the way.",
+ factors:"Factors used: 1, 3 and 5 (perspective).",
+ talkPts:[1,1,1,2], qaPts:[1,1,2],
+ whyTalk:"Three factors are there, but the details are general («molti pizzaioli», «famosa nel mondo»). The perspective is one sentence that says pizza is important for identity without saying why. Clear order, weak transitions.",
+ whyQa:"All four answered in a sentence or two. Opinions are given with no reason or example.",
+ ppr:[{t:"La pizza a Napoli"},{t:"ingredienti · posti · identità"},{t:"ingredienti semplici · forno"},{t:"famosa nel mondo"},{t:"pizzeria e strada · costa poco"},{t:"UNESCO 2017 · orgoglio"},{t:"pizza importante"}],
+ talkNote:"About 2 minutes 15 of a 3-minute task.",
+ talk:"Buongiorno. Oggi parlo della pizza a Napoli. Parlo degli ingredienti, dei posti dove [[la gente mangiano|la gente mangia]] la pizza e dell'identità.\n\nLa pizza napoletana ha ingredienti semplici: pomodoro, mozzarella, basilico e olio. È cotta nel forno a legna. [[È molto famoso|È molto famosa]] in tutto il mondo.\n\nA Napoli le persone mangiano la pizza in pizzeria e anche per strada. C'è una pizza che si chiama a portafoglio. [[Molto persone|Molte persone]] la mangiano perché costa poco. A Napoli ci sono molti pizzaioli.\n\nNel 2017 l'UNESCO [[ha riconosciuta|ha riconosciuto]] la pizza. [[I napoletani è|I napoletani sono]] molto orgogliosi della pizza perché è importante per la loro identità.\n\n[[In mia città|Nella mia città]] {{mangiamo la pizza anche, ma è diversa}}. In conclusione, la pizza è importante a Napoli. Grazie.",
+ qa:["Ho scelto la pizza perché mi piace. È un cibo molto famoso e [[volevo imparare di più su lei|volevo saperne di più]].","[[In mia comunità|Nella mia comunità]] {{mangiamo la pizza a casa}}. A Napoli mangiano in pizzeria. È diverso.","Sì, penso che i marchi [[sono|siano]] buoni. Proteggono la pizza.","Deve andare a Napoli e mangiare la pizza in una pizzeria. [[È molto buono.|È molto buona.]]"],
+ sources:["UNESCO, «L'arte del pizzaiuolo napoletano», scheda dell'elemento, 2017 (sito istituzionale)","MeteoWeb, «Unesco, Coldiretti: solo a Napoli 3mila artisti della pizza», 7 dicembre 2017 (articolo di giornale)","Associazione Verace Pizza Napoletana, «La storia» (sito di un'associazione)"],
+ terms:"pizza napoletana UNESCO · pizza Napoli tradizione",
+ card:{src:"UNESCO, «L'arte del pizzaiuolo napoletano»",sum:"L'UNESCO ha riconosciuto l'arte del pizzaiuolo nel 2017. A Napoli ci sono circa 3.000 pizzaiuoli.",pp:"Prodotto: la pizza. Pratica: cuocere nel forno a legna.",persp:"«Favorisce gli incontri sociali e lo scambio tra generazioni.»",ask:"",cmp:"{{Anche noi mangiamo la pizza.}}"},
+ resNote:"Three sources of two kinds, all citable. The perspective box is copied from the source in quotation marks, not explained in the student's words. The question for the author is blank. The reflection answers all four questions, briefly.",
+ raise:["Explain why. Tie the perspective to something already described: pizza costs little so that everyone can eat it, and that is part of the pride.","Be exact: UNESCO recognized the art of the pizzaiuolo, not the pizza. Replace «molti pizzaioli» with the number from the source.","Use connecting words (per prima cosa, inoltre, per questo) so the three factors build on each other.","In the Q&A, add one example and one reason to every answer.","Put the perspective in your own words on the source card."]
+},
+4:{
+ name:"Level 4 · Strong",
+ sum:"Three factors with specific detail and a clear culture link. Well organized. A few errors that do not block meaning.",
+ factors:"Factors used: 2, 3 and 5 (perspective).",
+ talkPts:[2,1,2,2], qaPts:[2,1,2],
+ whyTalk:"Full task with numbers, dates and named sources. Clear opening, three parts, closing. The perspective is explained once, in the third part, and is not connected back to the craft or the places.",
+ whyQa:"Answers have a reason and usually an example, and the factor-4 question is handled with a fact. The comparison with the student's own community is one short sentence.",
+ ppr:[{t:"Pizza a Napoli: mestiere, luoghi, orgoglio"},{t:"tre aspetti · Napoli"},{t:"mestiere · bottega · 3.000 pizzaiuoli"},{t:"mani · forno a legna · un minuto"},{t:"pizzeria, strada · a portafoglio · costa poco"},{t:"orgoglio · UNESCO 2017 · due milioni firme"},{t:"mia città diversa · mestiere, incontro, orgoglio"}],
+ talkNote:"Close to 3 minutes at a learner's pace.",
+ talk:"Buongiorno. Oggi presento la pizza a Napoli. Parlo di tre aspetti: il mestiere del pizzaiuolo, i luoghi dove si mangia la pizza e l'orgoglio dei napoletani.\n\nPrimo, il mestiere. A Napoli il pizzaiuolo impara il lavoro in bottega, guardando il maestro. Secondo l'UNESCO, [[in Napoli|a Napoli]] ci sono circa tremila pizzaiuoli. La pizza si stende con le mani e si cuoce nel forno a legna per poco più di un minuto.\n\nSecondo, i luoghi. La gente mangia la pizza in pizzeria con la famiglia, ma anche per strada. La pizza a portafoglio è piegata e si mangia camminando. Costa poco, quindi [[tutti possono comprarlo|tutti possono comprarla]]. In pizzeria si incontrano persone diverse: studenti, lavoratori e turisti.\n\nTerzo, l'orgoglio. Nel 2017 l'arte del pizzaiuolo napoletano [[ha stato riconosciuto|è stata riconosciuta]] dall'UNESCO. Più di due milioni di persone avevano firmato per la candidatura. Penso che i napoletani [[sono|siano]] orgogliosi perché la pizza rappresenta la loro città nel mondo.\n\nNella mia città la pizza è diversa: {{arriva a casa in una scatola}}. Per concludere, la pizza a Napoli è un mestiere, un luogo d'incontro e un motivo di orgoglio. Grazie.",
+ qa:["Ho scelto questo argomento perché mi piace la pizza e volevo saperne di più. Ho scoperto che a Napoli è un vero mestiere, con un maestro e gli apprendisti. Questo mi ha sorpreso molto, perché pensavo che fosse un lavoro come gli altri.","Nella mia comunità [[la gente mangiano|la gente mangia]] {{la pizza a casa}}. A Napoli invece vanno in pizzeria insieme. È diverso perché da noi è più veloce.","Secondo me sì, i marchi aiutano. Il marchio STG dice che la pizza si fa a mano e nel forno a legna. Così le persone sanno che è la vera pizza napoletana. Ma è importante anche che i giovani [[imparano|imparino]] il mestiere.","Gli consiglierei di andare in una pizzeria piccola, non [[nel più famoso|nella più famosa]]. Deve guardare il pizzaiuolo vicino al forno e provare la pizza a portafoglio per strada."],
+ sources:["UNESCO, «L'arte del pizzaiuolo napoletano», scheda dell'elemento, 2017 (sito istituzionale)","Associazione Pizzaiuoli Napoletani, filmato sulla pagina UNESCO, 2011 (video)","Regolamento (UE) n. 97/2010, «Pizza Napoletana STG» (documento ufficiale)","Associazione Verace Pizza Napoletana, «La storia» (sito di un'associazione)"],
+ terms:"arte del pizzaiuolo napoletano UNESCO · pizza napoletana STG disciplinare · pizza a portafoglio",
+ card:{src:"UNESCO, «L'arte del pizzaiuolo napoletano»",sum:"L'arte del pizzaiuolo ha quattro fasi, dall'impasto alla cottura nel forno a legna. Si impara in bottega. A Napoli ci sono circa 3.000 pizzaiuoli.",pp:"Prodotto: la pizza. Pratiche: stendere l'impasto a mano, cuocere nel forno a legna, imparare dal maestro.",persp:"Il mestiere passa dai vecchi ai giovani. La pizzeria è un posto dove la gente si incontra.",ask:"Perché l'UNESCO ha scelto il pizzaiuolo e non la pizza?",cmp:"{{Nella mia città la pizzeria è solo un ristorante.}}"},
+ resNote:"Four sources of three kinds: a text, a video and an official document. The student found the EU regulation alone. The source card is complete. The reflection answers all four questions and uses three sources.",
+ raise:["Come back to the perspective in every part, not only the third: the craft is passed on because it is a source of pride, and the price stays low because pizza must stay everyone's.","Compare with your own community using one specific example, not «è diverso perché è più veloce».","Check agreement and auxiliaries: «è stata riconosciuta», «comprarla». Use the subjunctive after «penso che».","Add one source that is a person: write to a pizzeria or an association and ask a question."]
+},
+5:{
+ name:"Level 5 · Top of the rubric",
+ sum:"Full task with specific detail, and the perspective explains the products and practices throughout. Varied, accurate Italian.",
+ factors:"Factors used: 2, 3 and 5 (perspective).",
+ talkPts:[2,2,2,3], qaPts:[2,2,3],
+ whyTalk:"Every factor has a number, a date or a named source. The perspective is used to explain the craft and the price, then stated as a conclusion. Varied structures with no errors that matter.",
+ whyQa:"Each answer gives an answer, an example and a reason. The factor-4 question is answered with a fact and a limit. The comparison names a difference and a similarity.",
+ ppr:[{t:"Pizza a Napoli: mestiere, luoghi, orgoglio"},{t:"cibo unisce comunità · tre aspetti"},{t:"mestiere · bottega · maestro · circa 3.000 pizzaiuoli"},{t:"mani · forno a legna · poco più di un minuto"},{t:"pizzeria e strada · a portafoglio · costa poco"},{t:"orgoglio · UNESCO 2017 · due milioni di firme"},{t:"confronto mia città · piatto, incontro, identità"}],
+ talkNote:"Fills 3 minutes at a learner's pace (about 290 words).",
+ talk:"Buongiorno. Oggi parlo della pizza a Napoli e di come il cibo unisce questa comunità. Presento tre aspetti: il mestiere del pizzaiuolo, i luoghi dove si mangia la pizza e l'orgoglio dei napoletani per questa tradizione.\n\nPer prima cosa, il mestiere. A Napoli fare la pizza non è solo un lavoro: è un'arte che si impara in bottega, guardando il maestro. Secondo l'UNESCO, in città lavorano circa tremila pizzaiuoli. L'apprendista impara a stendere l'impasto con le mani e a girare la pizza nel forno a legna, dove cuoce in poco più di un minuto. Nessuno impara da un libro: si impara stando accanto a chi lo sa fare.\n\nIl secondo aspetto sono i luoghi. La pizza si mangia in pizzeria, seduti con la famiglia, ma anche per strada. La pizza a portafoglio è piegata in quattro e si mangia camminando; costa poco, quindi la può comprare chiunque. Per questo la pizzeria è un posto dove si incontrano persone molto diverse: studenti, operai, turisti, nonni con i nipoti.\n\nInfine, l'orgoglio. Nel 2017 l'UNESCO ha riconosciuto l'arte del pizzaiuolo napoletano come patrimonio culturale immateriale dell'umanità. Più di due milioni di persone avevano firmato per sostenere la candidatura. Secondo me questo spiega tutto il resto: il mestiere si tramanda perché è un motivo di orgoglio, e la pizza costa poco perché deve restare di tutti.\n\nNella mia città {{la pizza arriva a casa in una scatola e spesso si mangia davanti alla televisione}}. A Napoli, invece, è un modo di stare insieme. Per concludere, la pizza napoletana non è soltanto un piatto: è un mestiere, un luogo d'incontro e un'identità. Grazie.",
+ qa:["All'inizio mi sembrava un argomento troppo facile, e invece ho scoperto che non ne sapevo quasi niente. Non immaginavo che esistesse un mestiere con maestri e apprendisti, come nelle botteghe degli artigiani. {{Mio zio lavora in una pizzeria nel New Jersey}} e volevo capire da dove viene il suo lavoro.","Nella mia comunità si mangia spesso in fretta e da soli. {{Da noi la pizza si ordina con il telefono e arriva in venti minuti.}} A Napoli, invece, andare in pizzeria è un'occasione per stare con gli altri. Però c'è anche una somiglianza: {{il venerdì sera la mia famiglia mangia sempre la pizza insieme}}, quindi anche per noi è un piccolo rito.","Sì, secondo me aiutano, ma non bastano. Il marchio STG, per esempio, stabilisce che la pizza si stende solo a mano e si cuoce nel forno a legna. Queste regole proteggono il nome. Però una tradizione vive se i giovani vogliono ancora imparare il mestiere: senza apprendisti in bottega, il marchio resterebbe solo un pezzo di carta.","Gli consiglierei di non cercare il ristorante più famoso su Internet. È meglio entrare in una pizzeria di quartiere, sedersi vicino al forno e guardare il pizzaiuolo mentre lavora. Poi dovrebbe provare una pizza a portafoglio per strada. Se fossi in lui, farei anche qualche domanda: la gente parla volentieri della propria pizza."],
+ sources:["UNESCO, «L'arte del pizzaiuolo napoletano», scheda dell'elemento, 2017 (sito istituzionale)","Associazione Pizzaiuoli Napoletani, filmato sulla pagina UNESCO, 2011 (video)","Regolamento (UE) n. 97/2010, «Pizza Napoletana STG» (documento ufficiale)","Associazione Verace Pizza Napoletana, «La storia» (sito di un'associazione: fonte di parte)","{{Risposta per e-mail di un pizzaiolo di Napoli a tre domande}} (persona contattata)"],
+ terms:"arte del pizzaiuolo napoletano UNESCO · pizza napoletana STG disciplinare · bottega pizzaiuolo apprendista · pizza a portafoglio tradizione",
+ card:{src:"UNESCO, «L'arte del pizzaiuolo napoletano»",sum:"L'arte del pizzaiuolo ha quattro fasi, dall'impasto alla cottura nel forno a legna. Si impara in bottega, guardando il maestro. A Napoli ci sono circa 3.000 pizzaiuoli.",pp:"Prodotto: la pizza. Pratiche: stendere l'impasto a mano, girare la pizza nel forno, imparare in bottega.",persp:"Il sapere passa da una generazione all'altra e la pizzeria è un luogo d'incontro. Per i napoletani questo mestiere è un legame con la propria comunità, non solo un modo di guadagnare.",ask:"Quanti giovani cominciano oggi questo mestiere rispetto a vent'anni fa?",cmp:"{{Nella mia città chi lavora in pizzeria di solito lo fa per pochi mesi; non è un mestiere che si tramanda.}}"},
+ resNote:"Five sources of four kinds, two found by the student. Each one is checked for who publishes it, and the association's site is marked as an interested party. The reflection answers all four questions and uses three sources.",
+ raise:["Nothing to add on paper. From here the score depends on Delivery and Fluency.","Rehearse from the PPR only, so the talk does not sound read or memorized.","Practice Q&A on the three factors you did not choose: 1, 4 and 6."]
+}
+};
+
+var TABS=[["ppr","PPR key words"],["talk","Presentation"],["qa","Q&A answers"],["res","Research and sources"]];
+var state={level:3,tab:"talk",err:false};
+try{var s=JSON.parse(localStorage.getItem("ricerca-ap-levels")||"null");if(s&&L[s.level]){state.level=s.level;state.tab=s.tab||"talk";state.err=!!s.err;}}catch(e){}
+function save(){try{localStorage.setItem("ricerca-ap-levels",JSON.stringify(state));}catch(e){}}
+
+function esc(t){return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function fmt(t){
+  var h=esc(t);
+  h=h.replace(/\[\[(.+?)\|(.+?)\]\]/g,function(m,w,r){return state.err?'<span class="err">'+w+'</span><span class="fix">'+r+'</span>':w;});
+  h=h.replace(/\{\{(.+?)\}\}/g,'<mark class="inv">$1</mark>');
+  return h;
+}
+function paras(t){return t.split("\n\n").map(function(p){return "<p>"+fmt(p)+"</p>";}).join("");}
+function words(t){return t.split(/\s+/).filter(function(w){return w&&w!=="·";}).length;}
+function $(id){return document.getElementById(id);}
+
+function rows(el,names,maxes,pts){
+  el.innerHTML=names.map(function(n,i){
+    return '<div class="row"><div class="top"><span>'+n+'</span><b>'+pts[i]+' / '+maxes[i]+'</b></div><div class="bar"><i style="width:'+Math.round(100*pts[i]/maxes[i])+'%"></i></div></div>';
+  }).join("");
+}
+
+function partHtml(d){
+  var t=state.tab,h="";
+  if(t==="ppr"){
+    h+='<p class="small muted" lang="en">Seven boxes, key words only, ten words at most in each.</p><div class="ppr">';
+    d.ppr.forEach(function(b,i){
+      var n=b.t?words(b.t):0,flag;
+      if(!b.t) flag='<span class="flag">empty</span>';
+      else if(b.s) flag='<span class="flag">'+n+' words · a sentence, not key words</span>';
+      else if(n>10) flag='<span class="flag">'+n+' words · over the limit</span>';
+      else flag='<span class="ok">'+n+' words</span>';
+      h+='<div class="pbox"><div class="lab" lang="en"><span>'+PLAB[i]+'</span>'+flag+'</div><div>'+(b.t?fmt(b.t):'<span class="noans" lang="en">(nothing written)</span>')+'</div></div>';
+    });
+    h+='</div>';
+  } else if(t==="talk"){
+    h+='<p class="small muted" lang="en">'+esc(d.talkNote)+'</p><div class="ital">'+paras(d.talk)+'</div>';
+  } else if(t==="qa"){
+    h+='<p class="small muted" lang="en">Four questions, 40 seconds each. The same four at every level.</p><div class="qa">';
+    Q.forEach(function(q,i){
+      h+='<div class="stack" style="gap:4px"><p class="q">'+(i+1)+'. '+esc(q)+'</p><p class="small muted" lang="en">'+QNOTE[i]+'</p><div class="ital">'+(d.qa[i]?'<p>'+fmt(d.qa[i])+'</p>':'<p class="noans" lang="en">(no answer in 40 seconds)</p>')+'</div></div>';
+    });
+    h+='</div>';
+  } else {
+    h+='<p class="small muted" lang="en">'+esc(d.resNote)+'</p>';
+    h+='<dl><div><dt lang="en">Search terms</dt><dd>'+fmt(d.terms)+'</dd></div>';
+    h+='<div><dt lang="en">Sources ('+d.sources.length+')</dt><dd><ul>'+d.sources.map(function(s){return '<li>'+fmt(s)+'</li>';}).join("")+'</ul></dd></div></dl>';
+    if(d.card){
+      var c=d.card, blank='<span class="noans" lang="en">(left blank)</span>';
+      h+='<div class="pbox"><div class="lab" lang="en"><span>Source card (one example)</span></div><dl>'+
+       '<div><dt>Titolo della fonte</dt><dd>'+fmt(c.src)+'</dd></div>'+
+       '<div><dt>Riassunto dei punti chiave</dt><dd>'+(c.sum?fmt(c.sum):blank)+'</dd></div>'+
+       '<div><dt>Prodotti e pratiche</dt><dd>'+(c.pp?fmt(c.pp):blank)+'</dd></div>'+
+       '<div><dt>Prospettive</dt><dd>'+(c.persp?fmt(c.persp):blank)+'</dd></div>'+
+       '<div><dt>Domanda per l\'autore</dt><dd>'+(c.ask?fmt(c.ask):blank)+'</dd></div>'+
+       '<div><dt>Confronto con la mia comunità</dt><dd>'+(c.cmp?fmt(c.cmp):blank)+'</dd></div></dl></div>';
+    } else {
+      h+='<p class="noans" lang="en">No source card was filled in.</p>';
+    }
+  }
+  return h;
+}
+
+function render(){
+  var d=L[state.level];
+  $("levels").innerHTML=[1,2,3,4,5].map(function(n){return '<button type="button" class="pick" id="lv-'+n+'" data-level="'+n+'" aria-pressed="'+(n===state.level)+'" aria-label="Level '+n+'">'+n+'</button>';}).join("");
+  $("tabs").innerHTML=TABS.map(function(t){return '<button type="button" class="pick" id="tab-'+t[0]+'" data-tab="'+t[0]+'" aria-pressed="'+(t[0]===state.tab)+'">'+esc(t[1])+'</button>';}).join("");
+  $("level-name").textContent=d.name;
+  $("level-sum").textContent=d.sum;
+  $("level-factors").textContent=d.factors;
+  rows($("rows-talk"),["Task execution","Cultural understanding","Organization","Language control"],[2,2,2,3],d.talkPts);
+  rows($("rows-qa"),["Task execution","Cultural understanding","Language control"],[2,2,3],d.qaPts);
+  $("why-talk").textContent=d.whyTalk;
+  $("why-qa").textContent=d.whyQa;
+  $("part").innerHTML=partHtml(d);
+  $("raise-title").textContent=state.level<5?"What would raise this to level "+(state.level+1):"What is left at level 5";
+  $("raise").innerHTML=d.raise.map(function(t){return "<li>"+esc(t)+"</li>";}).join("");
+  $("show-err").checked=state.err;
+}
+
+document.addEventListener("click",function(e){
+  var b=e.target.closest?e.target.closest("button.pick"):null;
+  if(!b) return;
+  var id=b.id;
+  if(b.dataset.level){state.level=parseInt(b.dataset.level,10);}
+  if(b.dataset.tab){state.tab=b.dataset.tab;}
+  save();render();
+  var again=document.getElementById(id);if(again){try{again.focus({preventScroll:true});}catch(x){}}
+});
+$("show-err").addEventListener("change",function(e){state.err=e.target.checked;save();render();});
+render();
+})();
+</script>
+</body>
+</html>
